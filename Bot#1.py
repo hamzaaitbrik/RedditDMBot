@@ -29,13 +29,6 @@ from seleniumwire.undetected_chromedriver import Chrome, ChromeOptions
 #        'no_proxy': 'localhost,127.0.0.1'
 #    }
 #}
-#options = {
-#    'proxy':{
-#        'http': 'http://proxy33:bf87203f77852664375ae582@154.52.36.33:3128',
-#        'https': 'https://proxy33:bf87203f77852664375ae582@154.52.36.33:3128',
-#        'no_proxy': 'localhost,127.0.0.1'
-#    }
-#}
 
 account_infos = {
     'username':'', # Reddit account username
@@ -44,12 +37,14 @@ account_infos = {
 
 # Driver init
 reddit_login = r'https://www.reddit.com/login/?dest=https%3A%2F%2Fwww.reddit.com%2Fuser%2F' + account_infos['username']
-driver = webdriver.Chrome('') # here goes the path where chrome driver is found
+driver = webdriver.Chrome('/home/hamza/chromedriver/chromedriver') # here goes the path where chrome driver is found
 driver.proxy = {
-    'http': 'http://user:pass@ip:port'
+    'http': 'http://user:pass@ip:port' # comment this section if you don't want to use a proxy
 }
 driver.delete_all_cookies()
 
+driver.get('https://whoer.net') # to check that the proxy is working
+time.sleep(20)
 driver.get(reddit_login)
 
 # Variable init
@@ -58,6 +53,7 @@ message = '' # the message which will be sent
 username_field = driver.find_element_by_id('loginUsername')
 password_field = driver.find_element_by_id('loginPassword')
 usernames = [] # leave empty
+usernames_sent = [] # leave empty
 keywords = [] # in this list goes the keywords which the API will look for in recent made comments
 scrape_urls = [] # leave empty
 data = [] # leave empty
@@ -96,30 +92,32 @@ def get_usernames(scrape_urls):
 def send_message(message, usernames):
     time.sleep(random.randint(25, 50))
     for username in usernames:
-        user_url = 'https://reddit.com/u/' + username
-        driver.get(user_url)
-        time.sleep(1)
-        try:
-            driver.find_element_by_xpath("//span[contains(text(), 'Chat')]").find_element_by_xpath('..').click()
-        except:
+        if username not in usernames_sent: # to prevent sending multiple messages to the same user
+            user_url = 'https://reddit.com/u/' + username
+            driver.get(user_url)
+            time.sleep(random.uniform(25, 50))
+            try:
+                driver.find_element_by_xpath("//span[contains(text(), 'Chat')]").find_element_by_xpath('..').click() # looks for the 'Chat' button
+            except:
+                usernames.remove(username) # removes the user with no 'Chat' button
+                send_message(message, usernames) # recalls the function send_message()
+            #try:
+            #    driver.find_element_by_xpath("//button[contains(text(), 'New Chat')]").find_element_by_xpath('..').click()
+            #except:
+            #    driver.find_element_by_xpath("//span[contains(text(), 'Chat')]").find_element_by_xpath('..').click()
+            #    pass
+            #driver.find_element_by_xpath("//button[contains(text(), 'New Chat')]").find_element_by_xpath('..').click()
+            time.sleep(random.uniform(11,24))
+            #textarea = driver.find_element_by_xpath("/html/body/div[4]/div/div/main/div[1]/div[2]/div/form/div/div")
+            #textarea.send_keys('Hello world!')
+            #pyautogui.click(x = random.randint(640, 890), y = random.randint(670, 690))
+            #time.sleep(random.uniform(70, 150))
+            driver.find_element_by_xpath('//*[@id="MessageInputTooltip--Container"]/div/div/textarea').send_keys(message)
+            time.sleep(random.uniform(0.1, 2))
+            #pyautogui.click(x = random.randint(965, 980), y = random.randint(676, 692))
+            driver.find_element_by_xpath('//*[@id="MessageInputTooltip--Container"]/div/button').click()
+            usernames_sent.append(username)
             usernames.remove(username)
-            send_message(message, usernames)
-        #try:
-        #    driver.find_element_by_xpath("//button[contains(text(), 'New Chat')]").find_element_by_xpath('..').click()
-        #except:
-        #    driver.find_element_by_xpath("//span[contains(text(), 'Chat')]").find_element_by_xpath('..').click()
-        #    pass
-        #driver.find_element_by_xpath("//button[contains(text(), 'New Chat')]").find_element_by_xpath('..').click()
-        time.sleep(random.uniform(11,24))
-        #textarea = driver.find_element_by_xpath("/html/body/div[4]/div/div/main/div[1]/div[2]/div/form/div/div")
-        #textarea.send_keys('Hello world!')
-        #pyautogui.click(x = random.randint(640, 890), y = random.randint(670, 690))
-        time.sleep(random.uniform(70, 150))
-        driver.find_element_by_xpath('//*[@id="MessageInputTooltip--Container"]/div/div/textarea').send_keys(message)
-        time.sleep(random.uniform(0.1, 2))
-        #pyautogui.click(x = random.randint(965, 980), y = random.randint(676, 692))
-        driver.find_element_by_xpath('//*[@id="MessageInputTooltip--Container"]/div/button').click()
-        usernames.remove(username)
     get_usernames(scrape_urls)
     send_message(message, usernames)
 
