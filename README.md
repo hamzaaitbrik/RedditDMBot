@@ -1,5 +1,5 @@
 # RedditSeleniumBot
-NOTE: The script needs to be modified, read the comments.\n
+NOTE: The script needs to be modified, read the comments.<br/>
 RedditSeleniumBot is a bot made for the purpouse of automating the process of sending messages to Reddit users
 What the bot does:
 1 - Logs into your Reddit account
