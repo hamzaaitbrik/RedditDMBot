@@ -11,5 +11,5 @@ What the bot does:<br/>
 7 - Deletes the user from the list of users<br/>
 8 - Recalls get_usernames() and send_messages()<br/>
 
-# NOTE: Use the V2.0 instead of V1.0
-In V2.0, the bot navigates to a private chat room to prevent the 'Fetching Messages' problem.
+# Important: Use the V2.0 instead of V1.0
+In V2.0, the bot navigates to a private chat room to prevent the 'Fetching Messages' problem. V2.0 works like a charm.
