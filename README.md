@@ -13,3 +13,5 @@ What the bot does:<br/>
 
 # Important: Use the V2.0 instead of V1.0
 In V2.0, the bot navigates to a private chat room to prevent the 'Fetching Messages' problem. V2.0 works like a charm.
+
+# Update: I ran some bots that resulted in Reddit changing the structre of some of their web pages, BotV3.0.py is the up to date version.
