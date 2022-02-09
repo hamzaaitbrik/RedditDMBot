@@ -1,3 +1,5 @@
+# Update: I ran some bots that resulted in Reddit changing the structre of some of their web pages, BotV3.0.py is the up to date version.
+
 # RedditSeleniumBot
 # NOTE: The script needs to be modified, read the comments, add as many keywords as you can, each keyword returns 100 users from the API
 RedditSeleniumBot is a bot made for the purpouse of automating the process of sending messages to Reddit users<br/>
@@ -13,5 +15,3 @@ What the bot does:<br/>
 
 # Important: Use the V2.0 instead of V1.0
 In V2.0, the bot navigates to a private chat room to prevent the 'Fetching Messages' problem. V2.0 works like a charm.
-
-# Update: I ran some bots that resulted in Reddit changing the structre of some of their web pages, BotV3.0.py is the up to date version.
