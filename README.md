@@ -1,8 +1,9 @@
+# RedditSeleniumBot
+
 # Update 24022022: Added GU.py and usernames.json to the project. GU gets usernames and writes them to usernames.json
 
 # Update: I ran some bots that resulted in Reddit changing the structre of some of their web pages, BotV3.0.py is the up to date version.
 
-# RedditSeleniumBot
 # NOTE: The script needs to be modified, read the comments, add as many keywords as you can, each keyword returns 100 users from the API
 RedditSeleniumBot is a bot made for the purpouse of automating the process of sending messages to Reddit users<br/>
 What the bot does:<br/>
