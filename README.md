@@ -16,5 +16,5 @@ What the bot does:<br/>
 7 - Deletes the user from the list of users<br/>
 8 - Recalls get_usernames() and send_messages()<br/>
 
-# Important: Use the V2.0 instead of V1.0
+# Important: Always use the latest version; Reddit keeps on changing the structure of their site everytime they detect bot activities..
 In V2.0, the bot navigates to a private chat room to prevent the 'Fetching Messages' problem. V2.0 works like a charm.
