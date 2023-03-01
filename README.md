@@ -1,9 +1,10 @@
-# NOTE: as of 01/03/2023, I'm working on a better version of this project. It will also have a web interface. I'm guessing all those scripts don't work anymore.
 # RedditMassDM
 
-# Update 24022022: Added GU.py and usernames.json to the project. GU gets usernames and writes them to usernames.json
+# UPDATE 01032023: I'm working on a better version of this project. It will have quite so many more features; such as a web interface for the bot(aka frontend), the bot will run even if Reddit changes their site structure, it will also have it's own mysql database for better data management... I will change README.md once I'm done, it should take a few weeks.
 
-# Update: I ran some bots that resulted in Reddit changing the structre of some of their web pages, BotV3.0.py is the up to date version.
+# UPDATE 24022022: Added GU.py and usernames.json to the project. GU gets usernames and writes them to usernames.json
+
+# UPDATE: I ran some bots that resulted in Reddit changing the structre of some of their web pages, BotV3.0.py is the up to date version.
 
 # NOTE: The script needs to be modified, read the comments, add as many keywords as you can, each keyword returns 100 users from the API
 RedditSeleniumBot is a bot made for the purpouse of automating the process of sending messages to Reddit users<br/>
