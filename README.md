@@ -1,4 +1,5 @@
-# RedditSeleniumBot
+# NOTE: as of 01/03/2023, I'm working on a better version of this project. It will also have a web interface. I'm guessing all those scripts don't work anymore.
+# RedditMassDM
 
 # Update 24022022: Added GU.py and usernames.json to the project. GU gets usernames and writes them to usernames.json
 
