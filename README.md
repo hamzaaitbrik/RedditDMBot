@@ -4,6 +4,11 @@ NOTE: V2.0 is the newest version of the bot, that is proven to work.<br/>
 24022022: Added GU.py and usernames.json to the project. GU gets usernames and writes them to usernames.json<br/>
 18012022: I ran some bots that resulted in Reddit changing the structre of some of their web pages, BotV3.0.py is the up to date version.<br/>
 
+# How to use
+1 - Change the variables that needs to be changed in variables.py<br/>
+2 - Run fillUsernames.csv.py to get usernames into usernames.csv, or fill it yourself (:<br/>
+3 - Run py.py
+
 # How does it work?
 RedditDMBot is a bot made for the purpouse of automating the process of sending messages to Reddit users<br/>
 What the bot does:<br/>
@@ -14,8 +19,3 @@ What the bot does:<br/>
 5 - Sends a message to the user<br/>
 6 - Appends the user to a list of users that already received messages<br/>
 7 - Deletes the user from the list of users<br/>
-
-# How to use
-1 - Change the variables that needs to be changed in variables.py<br/>
-2 - Run fillUsernames.csv.py to get usernames into usernames.csv, or fill it yourself (:<br/>
-3 - Run py.py
