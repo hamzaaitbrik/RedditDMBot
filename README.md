@@ -15,5 +15,6 @@ What the bot does:<br/>
 7 - Deletes the user from the list of users<br/>
 
 # How to use
-1 - Run fillUsernames.csv.py to get usernames into usernames.csv, or fill it yourself (:
-2 - Run py.py
+1 - Change the variables that needs to be changed in variables.py<br/>
+2 - Run fillUsernames.csv.py to get usernames into usernames.csv, or fill it yourself (:<br/>
+3 - Run py.py
