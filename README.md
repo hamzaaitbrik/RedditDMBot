@@ -1,7 +1,7 @@
 Feel free to contribute to this project or suggest more features to add.
 # Updates
-19032023: Will add an option to use a proxy with the bot in the next few days.<br/>
 NOTE: V2.0 is the newest version of the bot, that is proven to work.<br/>
+19032023: Will add an option to use a proxy with the bot in the next few days.<br/><br/>
 01032023: I'm working on a better version of this project. It will have quite so many more features; such as a web interface for the bot(aka frontend), the bot will run even if Reddit changes their site structure, it will also have it's own mysql database for better data management... I will change README.md once I'm done, it should take a few weeks.<br/>
 [Ignore]24022022: Added GU.py and usernames.json to the project. GU gets usernames and writes them to usernames.json<br/>
 [Ignore]18012022: I ran some bots that resulted in Reddit changing the structre of some of their web pages, BotV3.0.py is the up to date version.<br/>
