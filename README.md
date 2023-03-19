@@ -6,7 +6,8 @@ NOTE: V2.0 is the newest version of the bot, that is proven to work.<br/>
 18012022: I ran some bots that resulted in Reddit changing the structre of some of their web pages, BotV3.0.py is the up to date version.<br/>
 
 # How to use
-1 - Add an account to account.py
+0 - Have Python and Pip installed. Clone this repository. Run pip install -r r.txt<br/>
+1 - Add an account to account.py<br/>
 2 - Change the variables that needs to be changed in variables.py<br/>
 3 - Run fillUsernames.csv.py to get usernames into usernames.csv, or fill it yourself (:<br/>
 4 - Run py.py
