@@ -1,4 +1,4 @@
-Feel free to contribute to this project or suggest more features to add.
+Feel free to contribute to this project or suggest more features to add. You can reach me on Discord: OzymandiasTheGreat#3112
 # Updates
 NOTE: V2.0 is the newest version of the bot, that is proven to work.<br/>
 01032023: I'm working on a better version of this project. It will have quite so many more features; such as a web interface for the bot(aka frontend), the bot will run even if Reddit changes their site structure, it will also have it's own mysql database for better data management... I will change README.md once I'm done, it should take a few weeks.<br/>
