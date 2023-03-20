@@ -6,8 +6,8 @@ NOTE: V2.0 is the newest version of the bot, that is proven to work.<br/>
 [Ignore]18012022: I ran some bots that resulted in Reddit changing the structre of some of their web pages, BotV3.0.py is the up to date version.<br/>
 
 # In progress
-Add an option to use a proxy with the bot.<br/>
-Add an option to loop through multiple bots, if one banned switch to another.
+1 - Add an option to use a proxy with the bot.<br/>
+2 - Add an option to loop through multiple bots, if one banned switch to another.
 
 # How to use
 0 - Have Python and Pip installed. Clone this repository. Run ```pip install -r r.txt```<br/>
