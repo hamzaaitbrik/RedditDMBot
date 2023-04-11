@@ -6,4 +6,5 @@ data = [] # ! Do not touch, the bot will handle.
 scrape_urls = [] # ! Do not touch, the bot will handle.
 list_usernames = [] # ! Do not touch, the bot will handle.
 usernames_sent = [] # ! Do not touch, the bot will handle.
+unable_to_send = [] # ! Do not touch, the bot will handle.
 dict_usernames = {} # ! Do not touch, the bot will handle.
