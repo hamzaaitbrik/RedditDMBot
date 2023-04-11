@@ -78,14 +78,19 @@ def sendMessage(driver): # to send message
                 WebDriverWait(driver,30).until(EC.presence_of_element_located((By.XPATH,REDDIT_CHAT_PAGE['usernameInput']))).send_keys(username)
                 sleep(uniform(0.5,1.5))
                 WebDriverWait(driver,30).until(EC.presence_of_element_located((By.XPATH,REDDIT_CHAT_PAGE['firstResult']))).click()
+                #print('waiting')
                 sleep(uniform(0.5,1.5))
-                WebDriverWait(driver,30).until(EC.presence_of_element_located((By.XPATH,REDDIT_CHAT_PAGE['startChatButton']))).click()
-                sleep(uniform(0.5,1.5))
-                WebDriverWait(driver,30).until(EC.presence_of_element_located((By.XPATH,REDDIT_CHAT_PAGE['messageInput']))).send_keys(message)
-                sleep(uniform(0.5,1.5))
-                WebDriverWait(driver,30).until(EC.presence_of_element_located((By.XPATH,REDDIT_CHAT_PAGE['sendButton']))).click()
-                log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Message sent to {username}')
-                usernames_sent.append(username)
+                if(checkExistByXPATH(REDDIT_CHAT_PAGE['unableToMessage'])):
+                    log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Unable to message {username}')
+                    unable_to_send.append(username)
+                else:
+                    WebDriverWait(driver,30).until(EC.presence_of_element_located((By.XPATH,REDDIT_CHAT_PAGE['startChatButton']))).click()
+                    sleep(uniform(0.5,1.5))
+                    WebDriverWait(driver,30).until(EC.presence_of_element_located((By.XPATH,REDDIT_CHAT_PAGE['messageInput']))).send_keys(message)
+                    sleep(uniform(0.5,1.5))
+                    WebDriverWait(driver,30).until(EC.presence_of_element_located((By.XPATH,REDDIT_CHAT_PAGE['sendButton']))).click()
+                    log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Message sent to {username}')
+                    usernames_sent.append(username)
             else:
                 log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Message already sent to {username}.')
     except:
