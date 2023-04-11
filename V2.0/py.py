@@ -10,8 +10,8 @@ from modules import *
 global _
 global driver
 _ = {
-    'user':account['user'],
-    'pass':account['pass']
+    'username':account['user'],
+    'password':account['pass']
 }
 
 
