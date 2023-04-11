@@ -7,7 +7,8 @@ NOTE: V2.0 is the newest version of the bot, that is proven to work.<br/>
 
 # In progress
 1 - Add an option to use a proxy with the bot.<br/>
-2 - Add an option to loop through multiple bots, if one banned switch to another.
+2 - Add an option to loop through multiple bots, if one banned switch to another.<br/>
+3 - Add a UI(User Interface)
 
 # How to use
 0 - Have Python and Pip installed. Clone this repository. Run ```pip install -r r.txt```<br/>
