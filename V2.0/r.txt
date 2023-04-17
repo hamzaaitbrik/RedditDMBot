@@ -1,8 +1,2 @@
-csv
-requests
-json
 selenium
 undetected_chromedriver
-datetime
-time
-random
