@@ -22,7 +22,7 @@ def log(data):
         with open('log.txt', 'a') as log:
             log.write(f'{data}\n')
 
-def checkExistByXPATH(xpath):
+def checkExistByXPATH(driver,xpath):
     try:
         #sleep(uniform(3.5,5))
         #WebDriverWait(driver,5).until(EC.presence_of_element_located((By>
