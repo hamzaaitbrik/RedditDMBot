@@ -16,7 +16,6 @@ _ = {
 
 
 options = uc.ChromeOptions()
-#options.add_argument('--headless') # to run the bot in headless mode | meaning no GUI(Graphical User Interface). Remove first # to enable it
 
 
 
@@ -60,39 +59,58 @@ def loginRedditAccount(account,driver): # login to your Reddit bot
 
 
 def db2list(): # to get all usernames from usernames.csv into list_usernames
-    with open('usernames.csv', 'r') as usernames:
-        dbReader = csv.reader(usernames, delimiter=',')
+    with open('./db/usernames.csv','r') as usernames:
+        dbReader = csv.reader(usernames,delimiter=',')
         for row in dbReader:
             list_usernames.append(
                 str(row[0])
             )
+    # with open('./db/usernames_sent.csv','r') as us:
+    #     dbReader = csv.reader(us,delimiter=',')
+    #     for row in dbReader:
+    #         usernames_sent.append(
+    #             str(row[0])
+    #         )
 
 
 def sendMessage(driver): # to send message
-    log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Sending messages to {len(list_usernames)}')
+    log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Sending messages to {len(list_usernames)} users')
+    sent2 = open('./db/usernames_sent.csv','a',newline='',encoding='utf-8')
+    writer = csv.writer(sent2)
     try: # to handle exceptions
         for username in list_usernames:
             if username not in usernames_sent:
                 #log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Sending message to {username}')
-                driver.get(MESSAGE_URL)
-                WebDriverWait(driver,30).until(EC.presence_of_element_located((By.XPATH,REDDIT_CHAT_PAGE['usernameInput']))).send_keys(username)
-                sleep(uniform(0.5,1.5))
-                WebDriverWait(driver,30).until(EC.presence_of_element_located((By.XPATH,REDDIT_CHAT_PAGE['firstResult']))).click()
-                #print('waiting')
-                sleep(uniform(0.5,1.5))
-                if(checkExistByXPATH(driver,REDDIT_CHAT_PAGE['unableToMessage'])):
-                    log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Unable to message {username}')
-                    unable_to_send.append(username)
-                else:
-                    WebDriverWait(driver,30).until(EC.presence_of_element_located((By.XPATH,REDDIT_CHAT_PAGE['startChatButton']))).click()
-                    sleep(uniform(0.5,1.5))
-                    WebDriverWait(driver,30).until(EC.presence_of_element_located((By.XPATH,REDDIT_CHAT_PAGE['messageInput']))).send_keys(message)
-                    sleep(uniform(0.5,1.5))
-                    WebDriverWait(driver,30).until(EC.presence_of_element_located((By.XPATH,REDDIT_CHAT_PAGE['sendButton']))).click()
+                driver.get(f'{MESSAGE_URL}/{username}')
+                sleep(20) # waiting for DOM to load and to prevent spam # feel free to change the amount of waiting seconds to suit your needs.
+                # !! JavaScript handles sending messages.
+                try:
+                    driver.execute_script(TYPE_CHAT_MESSAGE_JS.replace('pythonisthebestprogramminglanguageever!', message))
+                    sleep(uniform(0.5,1))
+                    driver.execute_script(ENABLE_CHAT_MESSAGE_JS)
+                    sleep(uniform(0.5,1))
+                    driver.execute_script(CLICK_CHAT_MESSAGE_JS)
                     log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Message sent to {username}')
                     usernames_sent.append(username)
+                    writer.writerow(
+                        [username]
+                    )
+                except: # an exception might occur here, if it does, it means that there are already sent messages. The bot simply send the message again, if you don't want it to, remove all the code and write pass
+                    driver.execute_script(TYPE_ROOM_MESSAGE_JS.replace('pythonisthebestprogramminglanguageever!', message))
+                    sleep(uniform(0.5,1))
+                    driver.execute_script(ENABLE_ROOM_MESSAGE_JS)
+                    sleep(uniform(0.5,1))
+                    driver.execute_script(CLICK_ROOM_MESSAGE_JS)
+                    log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Message sent to {username}')
+                    usernames_sent.append(username)
+                    writer.writerow(
+                        [username]
+                    )
             else:
                 log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Message already sent to {username}.')
+            if(len(usernames_sent) % 20 == 0):
+                log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] 20 messages has been sent since the last pause, pausing for a minute to catch my breath...I don\'t want to be banned :p')
+                sleep(60)
     except:
         log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] ERROR! An exception occured. Retrying...')
         sleep(uniform(2,3))

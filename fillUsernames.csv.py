@@ -15,20 +15,18 @@ def getUsernames():
     for dict in data:
         for i in range(99):
             if(dict['data'][i]['author'] not in list_usernames and dict['data'][i]['author'] != 'AutoModerator'):
-                list_usernames.append(dict['data'][i]['author'])
+                list_usernames.append([dict['data'][i]['author']])
     for i in range(len(list_usernames)):
         dict_usernames[f'{i}'] = list_usernames[i]
     write2UsernamesCsv()
     log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [fillUsernames] Collected {len(list_usernames)} usernames.')
 
 def write2UsernamesCsv():
-    dbUsernames = open('usernames.csv','a',newline='',encoding='utf-8')
+    dbUsernames = open('./db/usernames.csv','a',newline='',encoding='utf-8')
     writer = csv.writer(dbUsernames)
     for username in list_usernames:
         writer.writerow(
-            [
-                str(username)
-            ]
+            username
         )
 
 

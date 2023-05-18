@@ -30,3 +30,16 @@ def checkExistByXPATH(driver,xpath):
     except NoSuchElementException:# or TimeoutException:
         return False
     return True
+
+with open('./js/chat_message.type.js','r') as type_chat_message:
+    TYPE_CHAT_MESSAGE_JS = type_chat_message.read()
+with open('./js/chat_message.enable.js','r') as enable_chat_message:
+    ENABLE_CHAT_MESSAGE_JS = enable_chat_message.read()
+with open('./js/chat_message.click.js','r') as click_chat_message:
+    CLICK_CHAT_MESSAGE_JS = click_chat_message.read()
+with open('./js/room_message.type.js','r') as type_room_message:
+    TYPE_ROOM_MESSAGE_JS = type_room_message.read()
+with open('./js/room_message.enable.js','r') as enable_room_message:
+    ENABLE_ROOM_MESSAGE_JS = enable_room_message.read()
+with open('./js/room_message.click.js','r') as click_room_message:
+    CLICK_ROOM_MESSAGE_JS = click_room_message.read()

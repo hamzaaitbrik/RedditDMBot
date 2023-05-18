@@ -1,4 +1,0 @@
-account = {
-    'user':'',
-    'pass':''
-}
