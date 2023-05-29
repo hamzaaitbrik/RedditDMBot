@@ -1,6 +1,6 @@
 from XPATH import *
 from CONSTANTS import *
-from variables import *
+from config import *
 from account import account
 import csv
 import requests

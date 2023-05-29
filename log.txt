@@ -1,0 +1,27 @@
+[2023-05-29 02:11:00] - [Main] The application will not run in headless mode.
+[2023-05-29 02:11:00] - [Main] Starting...
+[2023-05-29 02:11:23] - [Main] Logging in to Reddit account Chemical-Badger490:5sFkyvwtBmxZU4a
+[2023-05-29 02:11:26] - [Main] Successfuly logged in to Reddit account Chemical-Badger490:5sFkyvwtBmxZU4a
+[2023-05-29 02:11:26] - [Main] Sending messages to 99 users
+[2023-05-29 02:11:49] - [Main] Message sent to 4thebirbs
+[2023-05-29 02:12:12] - [Main] Message sent to buffering_neurons
+[2023-05-29 02:12:35] - [Main] Message sent to Loser71
+[2023-05-29 02:12:58] - [Main] Message sent to foamy-face
+[2023-05-29 02:13:21] - [Main] Message sent to Swayze1985
+[2023-05-29 02:13:37] - [Main] ERROR! An exception occured. Retrying...
+[2023-05-29 02:14:18] - [Main] The application will not run in headless mode.
+[2023-05-29 02:14:18] - [Main] Starting...
+[2023-05-29 02:15:01] - [Main] The application will not run in headless mode. Starting...
+[2023-05-29 02:15:20] - [Main] Logging in to Reddit account Chemical-Badger490:5sFkyvwtBmxZU4a
+[2023-05-29 02:15:24] - [Main] Successfuly logged in to Reddit account Chemical-Badger490:5sFkyvwtBmxZU4a
+[2023-05-29 02:15:24] - [Main] Sending messages to 99 users
+[2023-05-29 02:15:24] - [Main] ERROR! An exception occured. Retrying...
+[2023-05-29 02:16:22] - [Main] The application will not run in headless mode. Starting...
+[2023-05-29 02:16:40] - [Main] Logging in to Reddit account Chemical-Badger490:5sFkyvwtBmxZU4a
+[2023-05-29 02:16:44] - [Main] Successfuly logged in to Reddit account Chemical-Badger490:5sFkyvwtBmxZU4a
+[2023-05-29 02:16:44] - [Main] Sending messages to 99 users
+[2023-05-29 02:17:07] - [Main] Message sent to 4thebirbs
+[2023-05-29 02:17:30] - [Main] Message sent to buffering_neurons
+[2023-05-29 02:17:53] - [Main] Message sent to Loser71
+[2023-05-29 02:18:16] - [Main] Message sent to foamy-face
+[2023-05-29 02:18:27] - [Main] ERROR! An exception occured. Retrying...

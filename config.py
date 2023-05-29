@@ -1,6 +1,6 @@
-time_to_prevent_spam = 120 # this is the amount of seconds the bot will wait between each message to prevent spam/shadowban, feel free to change it to fit your needs
-headless = True # either True or False, keep an eye for capitalization. If True the bot will run in headless mode, this option saves memory and it would run on any CLI-only server
-message = '' # message to send to Reddit users
+time_to_prevent_spam = 20 # this is the amount of seconds the bot will wait between each message to prevent spam/shadowban, feel free to change it to fit your needs
+headless = False # default to False so that you can inspect what is happening # either True or False, keep an eye for capitalization. If True the bot will run in headless mode, this option saves memory and it would run on any CLI-only server
+message = 'Henlo' # message to send to Reddit users
 keywords = [] # list of keywords to scrape Reddit usernames based on. The bot will check these keywords and scrape a list of Reddit usernames that made a comment using them.
 
 

@@ -20,24 +20,12 @@ options = uc.ChromeOptions()
 
 
 
-def isHeadless(iH):
-    #global isHeadless
-    #log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - Would you like this application to run in headless mode? enter 1 for yes and 0 for no.')
-    #iH = int(input('\n--> '))
-    if(iH == 1):
-        log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] The application will run in headless mode.')
-        #options.headless = True # same thing as below code
-        options.add_argument('--headless')
-    elif(iH == 0):
-        log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] The application will not run in headless mode.')
+def isHeadless(headless):
+    if(not headless):
+        log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] The application will not run in headless mode. Starting...')
     else:
-        #iH = int(input(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - Headless requires a value of either 1 or 0, enter 1 if you want to run in headless mode and 0 if you want to run in normal mode.\n--> '))
-        log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] It is necessary to provide a value of either 1 or 0 for the application to continue. Enter 1 to run in normal mode and 0 to run in headless mode.')
-        try:
-            iH = int(input('\n--> '))
-        except:
-            iH = -1
-        isHeadless(iH)
+        log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] The application will run in headless mode. Starting...')
+        options.add_argument('--headless')
 
 
 def loginRedditAccount(account,driver): # login to your Reddit bot
@@ -65,12 +53,6 @@ def db2list(): # to get all usernames from usernames.csv into list_usernames
             list_usernames.append(
                 str(row[0])
             )
-    # with open('./db/usernames_sent.csv','r') as us:
-    #     dbReader = csv.reader(us,delimiter=',')
-    #     for row in dbReader:
-    #         usernames_sent.append(
-    #             str(row[0])
-    #         )
 
 
 def sendMessage(driver): # to send message
@@ -80,9 +62,8 @@ def sendMessage(driver): # to send message
     try: # to handle exceptions
         for username in list_usernames:
             if username not in usernames_sent:
-                #log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Sending message to {username}')
                 driver.get(f'{MESSAGE_URL}/{username}')
-                sleep(20) # waiting for DOM to load and to prevent spam # feel free to change the amount of waiting seconds to suit your needs.
+                sleep(time_to_prevent_spam)
                 # !! JavaScript handles sending messages.
                 try:
                     driver.execute_script(TYPE_CHAT_MESSAGE_JS.replace('pythonisthebestprogramminglanguageever!', message))
@@ -108,9 +89,6 @@ def sendMessage(driver): # to send message
                     )
             else:
                 log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Message already sent to {username}.')
-            if(len(usernames_sent) % 20 == 0):
-                log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] 20 messages has been sent since the last pause, pausing for a minute to catch my breath...I don\'t want to be banned :p')
-                sleep(60)
     except:
         log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] ERROR! An exception occured. Retrying...')
         sleep(uniform(2,3))
@@ -122,13 +100,7 @@ def sendMessage(driver): # to send message
 
 def main():
     db2list()
-    log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Would you like this application to run in headless mode? enter 1 for yes and 0 for no.')
-    try:
-        iH = int(input('\n--> '))
-        isHeadless(iH)
-    except:
-        isHeadless(-1)
-    log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Starting...')
+    isHeadless(headless)
     sleep(uniform(0.5,1))
     driver = uc.Chrome( # declaring WebDriver
         options=options

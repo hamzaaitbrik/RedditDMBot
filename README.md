@@ -1,6 +1,6 @@
 Feel free to contribute to this project or suggest more features to add. You can reach me on Discord: OzymandiasTheGreat#3112
 # Updates
-NOTE: 18/05/2023's version is the newest version that is proven to work. The only inconvenience is that the bot gets stopped after sending a dozen messages, even after sleeping for 20 seconds between each message, feel free to shoot me a DM on Discord with possible solutions and I'll implement them. <br/>
+NOTE: 18/05/2023's version is the newest version that is proven to work. The only inconvenience is that the bot gets stopped after sending a dozen messages, to counter this I added an amount of time to wait between messages that you can change in config file, feel free to shoot me a DM on Discord with possible solutions and I'll implement them. <br/>
 
 # In progress
 1 - Add an option to use a proxy with the bot.<br/>
@@ -10,8 +10,8 @@ NOTE: 18/05/2023's version is the newest version that is proven to work. The onl
 # How to use
 0 - Have Python and Pip installed. Clone this repository. Run ```pip install -r r.txt```<br/>
 1 - Add an account to ```account.py```<br/>
-2 - Change the variables that needs to be changed in ```variables.py```<br/>
-3 - Run ```fillUsernames.csv.py``` to get usernames into ```usernames.csv```, or fill it yourself (:<br/>
+2 - Change what needs to be changed in ```config.py```<br/>
+3 - Run ```fillUsernames.csv.py``` to get usernames into ```/db/usernames.csv```, or fill it yourself (:<br/>
 4 - Run ```py.py```
 
 # How does it work?
