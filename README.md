@@ -1,9 +1,6 @@
 Feel free to contribute to this project or suggest more features to add. You can reach me on Discord: OzymandiasTheGreat#3112
 # Updates
-NOTE: V2.0 is the newest version of the bot, that is proven to work.<br/>
-01032023: I'm working on a better version of this project. It will have quite so many more features; such as a web interface for the bot(aka frontend), the bot will run even if Reddit changes their site structure, it will also have it's own mysql database for better data management... I will change README.md once I'm done, it should take a few weeks.<br/>
-[Ignore]24022022: Added GU.py and usernames.json to the project. GU gets usernames and writes them to usernames.json<br/>
-[Ignore]18012022: I ran some bots that resulted in Reddit changing the structre of some of their web pages, BotV3.0.py is the up to date version.<br/>
+NOTE: 18/05/2023's version is the newest version that is proven to work. The only inconvenience is that the bot gets stopped after sending a dozen messages, even after sleeping for 20 seconds between each message, feel free to shoot me a DM on Discord with possible solutions and I'll implement them. <br/>
 
 # In progress
 1 - Add an option to use a proxy with the bot.<br/>
