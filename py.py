@@ -63,7 +63,7 @@ def sendMessage(driver): # to send message
         for username in list_usernames:
             if username not in usernames_sent:
                 driver.get(f'{MESSAGE_URL}/{username}')
-                sleep(time_to_prevent_spam)
+                sleep(cooldown)
                 # !! JavaScript handles sending messages.
                 try:
                     driver.execute_script(TYPE_CHAT_MESSAGE_JS.replace('pythonisthebestprogramminglanguageever!', message))
