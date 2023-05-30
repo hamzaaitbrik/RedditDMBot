@@ -4,7 +4,7 @@ NOTE: 18/05/2023's version is the newest version that is proven to work. The onl
 
 # In progress
 1 - Add an option to use a proxy with the bot. Estimated to be up and running by the 10th of June 2023<br/>
-2 - Add an option to loop through multiple bots, if one banned switch to another. Estimated to be up and running by the month of July<br/>
+2 - Add an option to loop through multiple bots, if one banned switch to another. Estimated to be up and running by the month of July 2023<br/>
 3 - Add a UI(User Interface). I haven't started working on this, I think the bot will remain a CLI-only tool for now.
 
 # How to use
