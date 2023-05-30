@@ -3,9 +3,9 @@ Feel free to contribute to this project or suggest more features to add. You can
 NOTE: 18/05/2023's version is the newest version that is proven to work. The only inconvenience is that the bot gets stopped after sending a dozen messages, to counter this I added an amount of time to wait between messages that you can change in config file, feel free to shoot me a DM on Discord with possible solutions and I'll implement them. <br/>
 
 # In progress
-1 - Add an option to use a proxy with the bot.<br/>
-2 - Add an option to loop through multiple bots, if one banned switch to another.<br/>
-3 - Add a UI(User Interface)
+1 - Add an option to use a proxy with the bot. Estimated to be up and running by 10/06/2023<br/>
+2 - Add an option to loop through multiple bots, if one banned switch to another. Estimated to be up and running by the month of July<br/>
+3 - Add a UI(User Interface). I haven't started working on this, I think the bot will remain a CLI-only tool for now.
 
 # How to use
 0 - Have Python and Pip installed. Clone this repository. Run ```pip install -r r.txt```<br/>
