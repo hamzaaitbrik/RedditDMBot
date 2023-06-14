@@ -12,7 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from datetime import datetime
 from time import sleep
-from random import uniform,randint
+from random import uniform,randint,choice
 
 
 

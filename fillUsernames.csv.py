@@ -1,5 +1,5 @@
 from modules import requests,json,csv,datetime,log
-from variables import *
+from config import *
 from CONSTANTS import *
 
 

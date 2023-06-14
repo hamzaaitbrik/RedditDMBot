@@ -66,7 +66,7 @@ def sendMessage(driver): # to send message
                 sleep(cooldown)
                 # !! JavaScript handles sending messages.
                 try:
-                    driver.execute_script(TYPE_CHAT_MESSAGE_JS.replace('pythonisthebestprogramminglanguageever!', message))
+                    driver.execute_script(TYPE_CHAT_MESSAGE_JS.replace('pythonisthebestprogramminglanguageever!', choice(messages)))
                     sleep(uniform(0.5,1))
                     driver.execute_script(ENABLE_CHAT_MESSAGE_JS)
                     sleep(uniform(0.5,1))
@@ -77,7 +77,7 @@ def sendMessage(driver): # to send message
                         [username]
                     )
                 except: # an exception might occur here, if it does, it means that there are already sent messages. The bot simply send the message again, if you don't want it to, remove all the code and write pass
-                    driver.execute_script(TYPE_ROOM_MESSAGE_JS.replace('pythonisthebestprogramminglanguageever!', message))
+                    driver.execute_script(TYPE_ROOM_MESSAGE_JS.replace('pythonisthebestprogramminglanguageever!', choice(messages)))
                     sleep(uniform(0.5,1))
                     driver.execute_script(ENABLE_ROOM_MESSAGE_JS)
                     sleep(uniform(0.5,1))
