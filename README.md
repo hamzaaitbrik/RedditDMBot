@@ -1,5 +1,5 @@
 Feel free to contribute to this project or suggest more features to add. You can reach me on Discord: OzymandiasTheGreat#3112
-# Important Note
+# Notice
 This project hasn't been tested in months, it might not work, and it is currently not being developed further more due to some life complications. I will start working on it in a few weeks.
 # Updates
 IMPORTANT: The script ```fillUsernames.csv.py``` is currently not working due to Reddit commercializing their API and charging to use it. You can fill ```/db/usernames.csv``` yourself while I develop a solution.<br/>
