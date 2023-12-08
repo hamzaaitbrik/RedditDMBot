@@ -1,6 +1,6 @@
 Feel free to contribute to this project or suggest more features to add. You can reach me on Discord: OzymandiasTheGreat#3112
 # Notice
-This project hasn't been tested in months, it might not work, and it is currently not being developed further more due to some life complications. I will start working on it in a few weeks.
+I am back to working on this project starting Friday 8th of December, I will get it back to life in a few days to weeks.
 # Updates
 IMPORTANT: The script ```fillUsernames.csv.py``` is currently not working due to Reddit commercializing their API and charging to use it. You can fill ```/db/usernames.csv``` yourself while I develop a solution.<br/>
 NOTE: 18/05/2023's version is the newest version that is proven to work. The only inconvenience is that the bot gets stopped after sending a dozen messages, to counter this I added an amount of time to wait between messages that you can change in config file, feel free to shoot me a DM on Discord with possible solutions and I'll implement them. <br/>
