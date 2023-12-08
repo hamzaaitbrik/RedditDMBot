@@ -1,0 +1,4 @@
+[2023-12-08 12:31:18] - [Main] The application will not run in headless mode. Starting...
+[2023-12-08 12:31:25] - [Main] Logging in to Reddit account :
+[2023-12-08 12:31:28] - [Main] Successfuly logged in to Reddit account :
+[2023-12-08 12:31:28] - [Main] Sending messages to 0 users
