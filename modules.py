@@ -19,7 +19,7 @@ from random import uniform,randint,choice
 
 def log(data):
         print(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - {data}')
-        with open('log.txt', 'a') as log:
+        with open('log', 'a') as log:
             log.write(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - {data}\n')
 
 def checkExistByXPATH(driver,xpath):
