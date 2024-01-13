@@ -1,0 +1,4 @@
+account = {
+    'user':'',
+    'pass':''
+}
