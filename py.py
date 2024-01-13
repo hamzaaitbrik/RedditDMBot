@@ -22,26 +22,26 @@ options = uc.ChromeOptions()
 
 def isHeadless(headless):
     if(not headless):
-        log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] The application will not run in headless mode. Starting...')
+        log(f'[Main] The application will not run in headless mode. Starting...')
     else:
-        log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] The application will run in headless mode. Starting...')
+        log(f'[Main] The application will run in headless mode. Starting...')
         options.add_argument('--headless')
 
 
 def loginRedditAccount(account,driver): # login to your Reddit bot
     try:
         driver.get(REDDIT_LOGIN_PAGE_URL)
-        log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Logging in to Reddit account {account["username"]}:{account["password"]}')
+        log(f'[Main] Logging in to Reddit account {account["username"]}:{account["password"]}')
         WebDriverWait(driver,30).until(EC.presence_of_element_located((By.XPATH,REDDIT_LOGIN_PAGE['usernameInput']))).send_keys(account['username'])
         sleep(uniform(0.5,1))
         WebDriverWait(driver,30).until(EC.presence_of_element_located((By.XPATH,REDDIT_LOGIN_PAGE['passwordInput']))).send_keys(account['password'])
         sleep(uniform(0.5,1))
         WebDriverWait(driver,30).until(EC.presence_of_element_located((By.XPATH,REDDIT_LOGIN_PAGE['loginButton']))).click()
         sleep(uniform(1,2))
-        log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Successfuly logged in to Reddit account {account["username"]}:{account["password"]}')
+        log(f'[Main] Successfuly logged in to Reddit account {account["username"]}:{account["password"]}')
         return 0
     except:
-        log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] ERROR! An exception occured. Retrying..')
+        log(f'[Main] ERROR! An exception occured. Retrying..')
         sleep(uniform(2,3))
         return loginRedditAccount(account)
 
@@ -56,7 +56,7 @@ def db2list(): # to get all usernames from usernames.csv into list_usernames
 
 
 def sendMessage(driver): # to send message
-    log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Sending messages to {len(list_usernames)} users')
+    log(f'[Main] Sending messages to {len(list_usernames)} users')
     sent2 = open('./db/usernames_sent.csv','a',newline='',encoding='utf-8')
     writer = csv.writer(sent2)
     try: # to handle exceptions
@@ -71,7 +71,7 @@ def sendMessage(driver): # to send message
                     driver.execute_script(ENABLE_CHAT_MESSAGE_JS)
                     sleep(uniform(0.5,1))
                     driver.execute_script(CLICK_CHAT_MESSAGE_JS)
-                    log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Message sent to {username}')
+                    log(f'[Main] Message sent to {username}')
                     usernames_sent.append(username)
                     writer.writerow(
                         [username]
@@ -82,15 +82,15 @@ def sendMessage(driver): # to send message
                     driver.execute_script(ENABLE_ROOM_MESSAGE_JS)
                     sleep(uniform(0.5,1))
                     driver.execute_script(CLICK_ROOM_MESSAGE_JS)
-                    log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Message sent to {username}')
+                    log(f'[Main] Message sent to {username}')
                     usernames_sent.append(username)
                     writer.writerow(
                         [username]
                     )
             else:
-                log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] Message already sent to {username}.')
+                log(f'[Main] Message already sent to {username}.')
     except:
-        log(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - [Main] ERROR! An exception occured. Retrying...')
+        log(f'[Main] ERROR! An exception occured. Retrying...')
         sleep(uniform(2,3))
         sendMessage(driver)
 
