@@ -1,5 +1,2 @@
-/db/
 /__pycache__/
 /venv/
-account.py
-log
