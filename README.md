@@ -1,4 +1,4 @@
-Feel free to contribute to this project or suggest more features to add. You can reach me on Discord @ozymandiasthegreat.
+Feel free to contribute to this project or suggest more features to add. You can reach me on Discord @**ozymandiasthegreat**.
 # Notice
 V4.0 is under development.
 
