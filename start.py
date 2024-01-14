@@ -15,12 +15,18 @@ _ = {
 }
 
 
-options = uc.ChromeOptions()
 
 
 
+def driverInit(): # Initializing driver instance
+    options = uc.ChromeOptions()
+    isHeadless(options,headless)
+    driver = uc.Chrome(options = options)
+    driver.maximize_window()
+    return driver
 
-def isHeadless(headless):
+
+def isHeadless(options,headless): # Should the bot run in headless mode or not?
     if(not headless):
         log(f'[Main] The application will not run in headless mode. Starting...')
     else:
@@ -41,9 +47,9 @@ def loginRedditAccount(account,driver): # login to your Reddit bot
         log(f'[Main] Successfuly logged in to Reddit account {account["username"]}:{account["password"]}')
         return 0
     except:
-        log(f'[Main] ERROR! An exception occured. Retrying..')
+        log(f'[Main] ERROR! An exception occured while trying to login to Reddit account {account["username"]}:{account["password"]}. Retrying..')
         sleep(uniform(2,3))
-        return loginRedditAccount(account)
+        return loginRedditAccount(account,driver)
 
 
 def db2list(): # to get all usernames from usernames.csv into list_usernames
@@ -74,7 +80,9 @@ def sendMessage(driver): # to send message
                     log(f'[Main] Message sent to {username}')
                     usernames_sent.append(username)
                     writer.writerow(
-                        [username]
+                        [
+                            username
+                        ]
                     )
                 except: # an exception might occur here, if it does, it means that there are already sent messages. The bot simply send the message again, if you don't want it to, remove all the code and write pass
                     driver.execute_script(TYPE_ROOM_MESSAGE_JS.replace('pythonisthebestprogramminglanguageever!', choice(messages)))
@@ -85,7 +93,9 @@ def sendMessage(driver): # to send message
                     log(f'[Main] Message sent to {username}')
                     usernames_sent.append(username)
                     writer.writerow(
-                        [username]
+                        [
+                            username
+                        ]
                     )
             else:
                 log(f'[Main] Message already sent to {username}.')
@@ -100,11 +110,7 @@ def sendMessage(driver): # to send message
 
 def main():
     db2list()
-    isHeadless(headless)
-    sleep(uniform(0.5,1))
-    driver = uc.Chrome( # declaring WebDriver
-        options=options
-        )
+    driver = driverInit()
     loginRedditAccount(_,driver)
     sendMessage(driver)
 
