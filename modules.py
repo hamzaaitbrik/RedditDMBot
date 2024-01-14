@@ -1,7 +1,7 @@
-from XPATH import *
-from CONSTANTS import *
-from config import *
-from account import account
+from src.xpath import *
+from src.constants import *
+from src.config import *
+from rdt.account import account
 import csv
 import requests
 import json
@@ -31,15 +31,15 @@ def checkExistByXPATH(driver,xpath):
         return False
     return True
 
-with open('./js/chat_message.type.js','r') as type_chat_message:
+with open('./src/js/chat_message.type.js','r') as type_chat_message:
     TYPE_CHAT_MESSAGE_JS = type_chat_message.read()
-with open('./js/chat_message.enable.js','r') as enable_chat_message:
+with open('./src/js/chat_message.enable.js','r') as enable_chat_message:
     ENABLE_CHAT_MESSAGE_JS = enable_chat_message.read()
-with open('./js/chat_message.click.js','r') as click_chat_message:
+with open('./src/js/chat_message.click.js','r') as click_chat_message:
     CLICK_CHAT_MESSAGE_JS = click_chat_message.read()
-with open('./js/room_message.type.js','r') as type_room_message:
+with open('./src/js/room_message.type.js','r') as type_room_message:
     TYPE_ROOM_MESSAGE_JS = type_room_message.read()
-with open('./js/room_message.enable.js','r') as enable_room_message:
+with open('./src/js/room_message.enable.js','r') as enable_room_message:
     ENABLE_ROOM_MESSAGE_JS = enable_room_message.read()
-with open('./js/room_message.click.js','r') as click_room_message:
+with open('./src/js/room_message.click.js','r') as click_room_message:
     CLICK_ROOM_MESSAGE_JS = click_room_message.read()
