@@ -1,9 +1,9 @@
-Feel free to contribute to this project or suggest more features to add. You can reach me on Discord: OzymandiasTheGreat#3112
+Feel free to contribute to this project or suggest more features to add. You can reach me on Discord @ozymandiasthegreat.
 # Notice
 V4.0 is under development.
+
 # Updates
-IMPORTANT: The script ```fillUsernames.csv.py``` is currently not working due to Reddit commercializing their API and charging to use it. You can fill ```/db/usernames.csv``` yourself while I develop a solution.<br/>
-NOTE: 18/05/2023's version is the newest version that is proven to work. The only inconvenience is that the bot gets stopped after sending a dozen messages, to counter this I added an amount of time to wait between messages that you can change in config file, feel free to shoot me a DM on Discord with possible solutions and I'll implement them. <br/>
+This software is tested on 14th of January, 2024. It is working..<br/>
 
 # In progress
 1 - Add an option to use a proxy with the bot. Estimated to be up and running by the 15th of June 2023<br/>
@@ -12,18 +12,17 @@ NOTE: 18/05/2023's version is the newest version that is proven to work. The onl
 
 # How to use
 0 - Have Python and Pip installed. Clone this repository. Run ```pip install -r r.txt```<br/>
-1 - Add an account to ```account.py```<br/>
-2 - Change what needs to be changed in ```config.py```<br/>
-3 - Run ```fillUsernames.csv.py``` to get usernames into ```/db/usernames.csv```, or fill it yourself (:<br/>
-4 - Run ```py.py```
+1 - Add an account to ```rdt/account.py```<br/>
+2 - Change what needs to be changed in ```src/config.py```<br/>
+3 - Fill ```db/usernames.csv``` with all the usernames you want to DM<br/>
+4 - Run ```start.py```
 
 # How does it work?
 RedditDMBot is a bot made for the purpouse of automating the process of sending messages to Reddit users<br/>
 What the bot does:<br/>
-1 - Scrapes all the users that made comments with the Keywords specified<br/>
-2 - Logs into your Reddit account<br/>
-3 - Navigates to chat page<br/>
-4 - Checks if the user already received a message<br/>
-5 - Sends a message to the user<br/>
-6 - Appends the user to a list of users that already received messages<br/>
-7 - Deletes the user from the list of users<br/>
+1 - Logs into your Reddit account<br/>
+2 - Navigates to chat page<br/>
+3 - Checks if the user already received a message<br/>
+4 - Sends a message to the user<br/>
+5 - Appends the user to a list of users that already received messages<br/>
+6 - Deletes the user from the list of users<br/>
