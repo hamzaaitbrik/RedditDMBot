@@ -11,7 +11,7 @@ This software is tested on 14th of January, 2024. It is working..<br/>
 3 - Add a UI(User Interface). I haven't started working on this, I think the bot will remain a CLI-only tool for now.
 
 # How to use
-0 - Have Python and Pip installed. Clone this repository. Run ```pip install -r r.txt```<br/>
+0 - Have Python and Pip installed. Clone this repository. Run ```pip install -r requirements.txt```<br/>
 1 - Add an account to ```rdt/account.py```<br/>
 2 - Change what needs to be changed in ```src/config.py```<br/>
 3 - Fill ```db/usernames.csv``` with all the usernames you want to DM<br/>
