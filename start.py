@@ -64,14 +64,14 @@ def db2list(): # to get all usernames from usernames.csv into list_usernames
 def sendMessage(driver): # to send message
     log(f'[Main] Sending messages to {len(list_usernames)} users')
     sent2 = open('./db/usernames_sent.csv', 'a', newline='', encoding='utf-8')
-    writer = csv.writer(sent2)
+    writer = csv.writer(sent2) # added writer object before for loop for better efficiency
     try: # to handle exceptions
         for username in list_usernames:
-            if username not in usernames_sent:
-                driver.get(f'{MESSAGE_URL}/{username}')
+            if username not in usernames_sent: # checking if the user was already DMed
+                driver.get(f'{MESSAGE_URL}/{username}') # navigating directly to the chat room!
                 # !! JavaScript handles sending messages.
                 sleep(cooldown)
-                try:
+                try: # to handle exceptions
                     driver.execute_script(TYPE_CHAT_MESSAGE_JS.replace('pythonisthebestprogramminglanguageever!', choice(messages)))
                     sleep(uniform(0.5, 1))
                     driver.execute_script(ENABLE_CHAT_MESSAGE_JS)
@@ -79,7 +79,7 @@ def sendMessage(driver): # to send message
                     driver.execute_script(CLICK_CHAT_MESSAGE_JS)
                     log(f'[Main] Message sent to {username}')
                     usernames_sent.append(username)
-                    writer.writerow(
+                    writer.writerow( # saving this user to the list of users that were DMed
                         [
                             username
                         ]
@@ -92,7 +92,7 @@ def sendMessage(driver): # to send message
                     driver.execute_script(CLICK_ROOM_MESSAGE_JS)
                     log(f'[Main] Message sent to {username}')
                     usernames_sent.append(username)
-                    writer.writerow(
+                    writer.writerow( # saving this user to the list of users that were DMed
                         [
                             username
                         ]
