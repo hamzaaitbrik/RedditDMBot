@@ -1,6 +1,6 @@
 Feel free to contribute to this project or suggest more features to add. You can reach me on Discord @**ozymandiasthegreat**.
 # Notice
-V4.0 is under development.
+Java version is under development, to allow more functionality for managing accounts and proxies..
 
 # Updates
 This software is tested on 14th of January, 2024. It is working..<br/>
