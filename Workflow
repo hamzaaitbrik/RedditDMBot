@@ -1,0 +1,11 @@
+Loop:
+    Initialize a list of all available accounts
+        Loop:
+        Get a random account from the list of all available accounts
+        Log in to that account
+        Send a message to a username
+        Remove that account from the list of all available accounts
+        Add that account to a list of used accounts
+    When the list of all available accounts is empty
+    Reintialize the list of all available accounts with the list of used accounts
+    Repeat
