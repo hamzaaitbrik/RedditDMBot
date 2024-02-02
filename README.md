@@ -14,8 +14,8 @@ This software is tested on 2nd of February, 2024. It is working..<br>
 
 # How to use
 0 - Have Python and Pip installed. Clone this repository running the command ```git clone https://github.com/hamzaaitbrik/RedditDMBot.git``` or [Download it](https://github.com/hamzaaitbrik/RedditDMBot/archive/refs/heads/main.zip). Then run ```pip install -r requirements.txt``` to install dependencies<br>
-1 - Add accounts to ```rdt/account.json```. Refer to (Documentation)[https://github.com/hamzaaitbrik/RedditDMBot] to see how to properly add accounts.<br>
-2 - Change what needs to be changed in ```rsrc/config.json```. Refer to (Documentation)[https://github.com/hamzaaitbrik/RedditDMBot] to see how to change values to meet your needs.<br>
+1 - Add accounts to ```rdt/account.json```. Refer to [Documentation](https://github.com/hamzaaitbrik/RedditDMBot) to see how to properly add accounts.<br>
+2 - Change what needs to be changed in ```rsrc/config.json```. Refer to [Documentation](https://github.com/hamzaaitbrik/RedditDMBot) to see how to change values to meet your needs.<br>
 3 - Fill ```db/usernames.csv``` with all the usernames you want to DM<br>
 4 - Run ```start.py```
 
