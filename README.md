@@ -21,14 +21,15 @@ Add a UI(User Interface). I haven't started working on this, I think the bot wil
 # How does it work?
 RedditDMBot is a bot made for the purpouse of automating the process of sending messages to Reddit users<br>
 What the bot does:<br>
-1 - Logs into one of the Reddit account in ```accounts.json```<br>
-2 - Navigates to chat page<br>
-3 - Checks if the user already received a message<br>
-4 - Sends a message to the user<br>
-5 - Deletes the user from the list of users to DM and adds it to ```db/usernames_sent.csv```<br>
-6 - Logs out of the account used to DM the user<br>
-7 - Remove it from the list of available accounts and add it to a list of used accounts<br>
-8 - Logs into another Reddit account that wasn't used<br>
+0 - The bot checks whether you have a proxy in ```rsrc/config.json```. Refer to [Documentation](https://github.com/hamzaaitbrik/RedditDMBot/blob/main/rsrc/README.md) to better understand how to properly add a proxy.<br>
+1 - Logs into one of the Reddit account in ```accounts.json```.<br>
+2 - Navigates to chat page.<br>
+3 - Checks if the user already received a message.<br>
+4 - Sends a message to the user.<br>
+5 - Deletes the user from the list of users to DM and adds it to ```db/usernames_sent.csv```.<br>
+6 - Logs out of the account used to DM the user.<br>
+7 - Remove it from the list of available accounts and add it to a list of used accounts.<br>
+8 - Logs into another Reddit account that wasn't used.<br>
 9 - If there are no many available accounts, the bot reuses the used accounts until all users on your ```db/usernames.csv``` received DMs.
 
 
