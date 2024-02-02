@@ -26,12 +26,11 @@ What the bot does:<br>
 2 - Navigates to chat page<br>
 3 - Checks if the user already received a message<br>
 4 - Sends a message to the user<br>
-5 - Appends the user to a list of users that already received messages<br>
-6 - Deletes the user from the list of users<br>
-7 - Logs out of the account used to DM the user<br>
-8 - Remove it from the list of available accounts and add it to a list of used accounts<br>
-9 - Logs into another Reddit account that wasn't used<br>
-10 - If there are no many available accounts, the bot reuses the used accounts until all users on your ```db/usernames.csv``` received DMs.
+5 - Deletes the user from the list of users to DM and adds it to ```db/usernames_sent.csv```<br>
+6 - Logs out of the account used to DM the user<br>
+7 - Remove it from the list of available accounts and add it to a list of used accounts<br>
+8 - Logs into another Reddit account that wasn't used<br>
+9 - If there are no many available accounts, the bot reuses the used accounts until all users on your ```db/usernames.csv``` received DMs.
 
 
 <br><br><br>
