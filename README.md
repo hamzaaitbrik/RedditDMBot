@@ -1,6 +1,7 @@
 Feel free to contribute to this project or suggest more features to add. You can reach me on Discord @**ozymandiasthegreat**.
 # What's new?
-Multi-accounting implemented in Python.
+Multi-accounting implemented in Python.<br>
+Added proxy support. You can now use the bot with a proxy.
 
 # Notice
 Java version is under development, to allow more functionality for managing accounts and proxies..
