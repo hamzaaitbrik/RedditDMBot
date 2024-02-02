@@ -24,12 +24,19 @@ def log(data):
 
 def checkExistByXPATH(driver,xpath):
     try:
-        #sleep(uniform(3.5,5))
-        #WebDriverWait(driver,5).until(EC.presence_of_element_located((By>
         driver.find_element(By.XPATH,xpath)
-    except NoSuchElementException:# or TimeoutException:
+    except NoSuchElementException:
         return False
     return True
+
+def writeToCSV(data):
+    with open(f'./db/usernames_sent.csv', 'a', newline='', encoding='utf-8') as db:
+        _writer = writer(db)
+        _writer.writerow(
+            [
+                data
+            ]
+        )
 
 def getAccounts():
     with open('rdt/accounts.json','r') as accounts:
