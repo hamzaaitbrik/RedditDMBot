@@ -20,9 +20,27 @@ list_usernames, usernames_sent = list(), list()
 def driverInit(): # Initializing driver instance
     options = uc.ChromeOptions()
     isHeadless(options, config['headless'])
+    addProxyToDriver(options)
     driver = uc.Chrome(options = options)
     driver.maximize_window()
     return driver
+
+
+def addProxyToDriver(options):
+    proxy = config['proxy']
+    if(proxy == 'localhost'):
+        return
+    else:
+        log(f'[Main] Adding proxy {proxy}...')
+        host = proxy.split(':')[0]
+        port = proxy.split(':')[1]
+        username = proxy.split(':')[2]
+        password = proxy.split(':')[3]
+        with open('./proxy/background.js', 'r') as proxyBackend:
+            proxyLogic = proxyBackend.read().replace('_host', host).replace('_port', port).replace('_username', username).replace('_password', password)
+            with open('./proxy/background.js', 'w') as proxyBackend:
+                proxyBackend.write(proxyLogic)
+        options.add_argument('--load-extention=./proxy')
 
 
 def isHeadless(options, headless): # Should the bot run in headless mode or not?
