@@ -1,5 +1,5 @@
 # How to implement multi-accounting?
-Modify ```accounts.json``` and add as many accounts as you need.<br>
+Modify ```accounts.json``` and add as many accounts as you need.<br><br>
 Example:
 ```
 [
