@@ -1,6 +1,6 @@
 # How to implement multi-accounting?
 Modify ```accounts.json``` and add as many accounts as you need.<br><br>
-Example:
+Example#1:
 ```
 [
     {
@@ -12,6 +12,7 @@ Example:
 If your ```accounts.json``` file looks like the above, the bot will only use one account ```user1:pass1```. To add new accounts, the structure of ```accounts.json``` should look like this:
 <br><br>
 
+Example#2:
 ```
 [
     {
