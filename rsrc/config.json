@@ -1,8 +1,8 @@
 {
-    "cooldown":120,
+    "cooldown":1,
     "headless":false,
     "messages":[
-        "",
-        ""
+        "Hello",
+        "Hi"
     ]
 }
