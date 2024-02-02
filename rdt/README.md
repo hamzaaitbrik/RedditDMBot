@@ -26,7 +26,7 @@ Example#2:
     {
         "username":"user3",
         "password":"pass3"
-    },
+    }
 ]
 ```
 In the above example of ```accounts.json``` the bot will loop between three accounts ```user1:pass1```, ```user2:pass2``` and ```user3:pass3```. The bot will use the first account to send a DM and immediately switch to the second account to prevent the first account from being detected and shadowbanned; when the bot reaches the last available account ```user3:pass3``` and finds no more accounts to send DMs, it just loops through the accounts again.
