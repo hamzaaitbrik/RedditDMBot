@@ -20,9 +20,27 @@ list_usernames, usernames_sent = list(), list()
 def driverInit(): # Initializing driver instance
     options = uc.ChromeOptions()
     isHeadless(options, config['headless'])
+    addProxyToDriver(options)
     driver = uc.Chrome(options = options)
     driver.maximize_window()
     return driver
+
+
+def addProxyToDriver(options):
+    proxy = config['proxy']
+    if(proxy == 'localhost'):
+        return
+    else:
+        log(f'[Main] Adding proxy {proxy}...')
+        host = proxy.split(':')[0]
+        port = proxy.split(':')[1]
+        username = proxy.split(':')[2]
+        password = proxy.split(':')[3]
+        with open('./proxy/background.js', 'r') as proxyBackend:
+            proxyLogic = proxyBackend.read().replace('_host', host).replace('_port', port).replace('_username', username).replace('_password', password)
+            with open('./proxy/background.js', 'w') as proxyBackend:
+                proxyBackend.write(proxyLogic)
+        options.add_argument('--load-extention=./proxy')
 
 
 def isHeadless(options, headless): # Should the bot run in headless mode or not?
@@ -33,10 +51,10 @@ def isHeadless(options, headless): # Should the bot run in headless mode or not?
         options.add_argument('--headless')
 
 
-def getRandomAccount(accounts):
-    account = choice(accounts)
-    accounts.remove(account)
-    return account
+# def getAccount(accounts):
+#     account = accounts[0]
+#     accounts.remove(account)
+#     return account
 
 
 def loginRedditAccount(account, driver): # login to your Reddit bot
@@ -120,11 +138,12 @@ def main():
         username = choice(list_usernames) # getting a random username from the list of usernames to DM
         if(len(accounts) == 0): # to check if all accounts are used
             accounts, used_accounts = used_accounts, list() # repopulates accounts with used_accounts and reinitialize used_accounts to an empty list
-        account = getRandomAccount(accounts) # getting a random account from the list of all available accounts, removing that account from that list at the same time
+        account = accounts.pop(0) # getting the first account of the list accounts, then removing it
         driver = driverInit() # initializing the web driver
         loginRedditAccount(account, driver) # logs into the random account chosen
         sendMessage(username, driver) # sends a message to a random username
         list_usernames.remove(username) # removing that username from the list of usernames to DM
+        writeToCSV(username) # adding the user that was DMed to the database of usernames that received DMs
         used_accounts.append(account) # appending the account used to DM to the list of used accounts
 
 
