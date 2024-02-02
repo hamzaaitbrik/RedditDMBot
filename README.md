@@ -10,7 +10,7 @@ This software is tested on 2nd of February, 2024. It is working..<br>
 
 # In progress
 1 - Add an option to use a proxy with the bot.<br>
-3 - Add a UI(User Interface). I haven't started working on this, I think the bot will remain a CLI-only tool for now.
+2 - Add a UI(User Interface). I haven't started working on this, I think the bot will remain a CLI-only tool for now.
 
 # How to use
 0 - Have Python and Pip installed. Clone this repository running the command ```git clone https://github.com/hamzaaitbrik/RedditDMBot.git``` or simply [Download it](https://github.com/hamzaaitbrik/RedditDMBot/archive/refs/heads/main.zip). Then run ```pip install -r requirements.txt``` to install dependencies<br>
