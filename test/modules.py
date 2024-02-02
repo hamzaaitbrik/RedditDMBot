@@ -1,10 +1,10 @@
-from src.xpath import *
-from src.constants import *
-from src.config import *
-from rdt.account import account
-import csv
+# from src.xpath import *
+# from src.constants import *
+# from src.config import *
+# from rdt.account import account
+from csv import reader, writer
 import requests
-import json
+from json import load
 import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -31,15 +31,31 @@ def checkExistByXPATH(driver,xpath):
         return False
     return True
 
-with open('./src/js/chat_message.type.js','r') as type_chat_message:
+def getAccounts():
+    with open('rdt/accounts.json','r') as accounts:
+        return load(accounts)
+
+def getConfig():
+    with open('rsrc/config.json','r') as config:
+        return load(config)
+
+def getXpath():
+    with open('rsrc/xpath.json','r') as xpath:
+        return load(xpath)
+
+def getLinks():
+    with open('rsrc/links.json','r') as links:
+        return load(links)
+
+with open('./rsrc/js/chat_message.type.js','r') as type_chat_message:
     TYPE_CHAT_MESSAGE_JS = type_chat_message.read()
-with open('./src/js/chat_message.enable.js','r') as enable_chat_message:
+with open('./rsrc/js/chat_message.enable.js','r') as enable_chat_message:
     ENABLE_CHAT_MESSAGE_JS = enable_chat_message.read()
-with open('./src/js/chat_message.click.js','r') as click_chat_message:
+with open('./rsrc/js/chat_message.click.js','r') as click_chat_message:
     CLICK_CHAT_MESSAGE_JS = click_chat_message.read()
-with open('./src/js/room_message.type.js','r') as type_room_message:
+with open('./rsrc/js/room_message.type.js','r') as type_room_message:
     TYPE_ROOM_MESSAGE_JS = type_room_message.read()
-with open('./src/js/room_message.enable.js','r') as enable_room_message:
+with open('./rsrc/js/room_message.enable.js','r') as enable_room_message:
     ENABLE_ROOM_MESSAGE_JS = enable_room_message.read()
-with open('./src/js/room_message.click.js','r') as click_room_message:
+with open('./rsrc/js/room_message.click.js','r') as click_room_message:
     CLICK_ROOM_MESSAGE_JS = click_room_message.read()
