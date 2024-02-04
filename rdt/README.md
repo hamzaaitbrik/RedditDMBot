@@ -1,4 +1,4 @@
-Feel free to reach me on Discord @**ozymandiasthegreat** in case you need assistance.<br><br>
+Feel free to reach me on Discord @**ozymandiasthegreat** in case you need assistance.
 # How to implement multi-accounting?
 Modify ```accounts.json``` and add as many accounts as you need.<br><br>
 Example#1:
