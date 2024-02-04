@@ -27,7 +27,7 @@ def driverInit(): # Initializing driver instance
 
 
 def addProxyToDriver(options):
-    proxy = config['proxy']
+    proxy = config['proxy']['proxy']
     if(proxy == 'localhost'):
         return
     else:
@@ -125,6 +125,10 @@ def sendMessage(username,driver): # to send message
         log(f'[Main] ERROR! An exception occured. Retrying...')
         sleep(uniform(2, 3))
         sendMessage(username, driver)
+    if(config['proxy']['proxyRotationLink'] != ''):
+        log('[Main] Rotating proxy IP...')
+        get(config['proxy']['proxyRotationLink'])
+        sleep(uniform(15,20))
 
 
 
