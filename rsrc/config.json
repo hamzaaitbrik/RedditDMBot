@@ -1,5 +1,8 @@
 {
-    "proxy":"localhost",
+    "proxy":{
+        "proxy":"localhost",
+        "proxyRotationLink":""
+    },
     "cooldown":5,
     "headless":false,
     "messages":[
