@@ -1,4 +1,5 @@
 {
     "REDDIT_LOGIN_PAGE_URL":"https://www.reddit.com/login/?dest=https%3A%2F%2Fwww.reddit.com%2Fuser%2F",
-    "MESSAGE_URL":"https://chat.reddit.com/user"
+    "MESSAGE_URL":"https://chat.reddit.com/user",
+    "proxyRotationLink":""
 }
