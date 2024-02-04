@@ -2,6 +2,7 @@
 # from src.constants import *
 # from src.config import *
 # from rdt.account import account
+from requests import get
 from csv import reader, writer
 import requests
 from json import load
