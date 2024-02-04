@@ -1,3 +1,4 @@
+Feel free to reach me on Discord @**ozymandiasthegreat** in case you need assistance.<br><br>
 # How to implement multi-accounting?
 Modify ```accounts.json``` and add as many accounts as you need.<br><br>
 Example#1:
