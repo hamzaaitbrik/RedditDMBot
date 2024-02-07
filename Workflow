@@ -1,4 +1,4 @@
-[ Workflow ] | This is a basic algorithm in plain English of how the software works
+[ Workflow ] # This is a basic algorithm in plain English of how the software works
 Loop:
     Initialize a list of all available accounts
         Loop:
