@@ -16,7 +16,7 @@ This software is tested on 2nd of February, 2024. It is working..<br>
 Add a UI(User Interface). I haven't started working on this, I think the bot will remain a CLI-only tool for now.
 
 # How to use
-0 - Have Python and Pip installed. Clone this repository running the command ```git clone https://github.com/hamzaaitbrik/RedditDMBot.git``` or simply [Download it](https://github.com/hamzaaitbrik/RedditDMBot/archive/refs/heads/main.zip). Then run ```pip install -r requirements.txt``` to install dependencies<br>
+0 - Have Python and Pip installed. Clone this repository running the command ```git clone https://github.com/hamzaaitbrik/RedditDMBot.git``` or simply [Download it](https://github.com/hamzaaitbrik/RedditDMBot/archive/refs/heads/selenium.zip). Then run ```pip install -r requirements.txt``` to install dependencies<br>
 1 - Add accounts to ```rdt/account.json```. Refer to [rdt/README](https://github.com/hamzaaitbrik/RedditDMBot/blob/main/rdt/README.md) to see how to properly add accounts.<br>
 2 - Change what needs to be changed in ```rsrc/config.json```. Refer to [rsrc/README](https://github.com/hamzaaitbrik/RedditDMBot/blob/main/rsrc/README.md) to see how to change values to meet your needs.<br>
 3 - Fill ```db/usernames.csv``` with all the usernames you want to DM.<br>
