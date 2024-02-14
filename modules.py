@@ -25,8 +25,8 @@ def dbToList(list_usernames): # to get all usernames from usernames.csv into lis
                 str(row[0])
             )
 
-def writeToUsernamesSentCSV(data):
-    with open(f'./db/usernames_sent.csv', 'a', newline='', encoding='utf-8') as db:
+def writeToCSV(database,data):
+    with open(database, 'a', newline='', encoding='utf-8') as db:
         _writer = writer(db)
         _writer.writerow(
             [
