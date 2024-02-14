@@ -6,7 +6,8 @@ The basic configuration that ships with the bot looks like this:
 {
     "proxy":{
         "proxy":"localhost",
-        "proxyRotationLink":""
+        "proxyRotationLink":"",
+        "proxyRotationCooldown":20
     },
     "cooldown":5,
     "headless":false,
@@ -18,7 +19,7 @@ The basic configuration that ships with the bot looks like this:
 ```
 <br>
 
-```proxy``` is the configuration of the proxy, it is default to ```localhost``` and empty ```proxyRotationLink```; meaning no proxy. To add a proxy, simply replace ```localhost``` with ```host:port:user:pass``` in that format. ```proxyRotationLink``` is the link the bot will use to rotate the IP of the proxy assuming you have a proxy that rotates its IP, leave empty if you don't have.<br>
+```proxy``` is the configuration of the proxy, it is default to ```localhost``` and empty ```proxyRotationLink```; meaning no proxy. To add a proxy, simply replace ```localhost``` with ```host:port:user:pass``` in that format. ```proxyRotationLink``` is the link the bot will use to rotate the IP of the proxy assuming you have a proxy that rotates its IP, leave empty if you don't have. ```proxyRotationCooldown``` is the amount of time your proxy takes to rotate, it is ignored if ```proxy``` is equal to ```localhost```.<br>
 The bot **for now** only supports the use of one proxy with authentication; more functionality will be added. In this case, make sure you get an authenticated proxy that rotates its IP.<br>
 This is how proxy part should look like:<br>
 ```
