@@ -48,6 +48,7 @@ async def RedditDMBot(account,username):
                     account['username']
                 ]
             )
+            await page.screenshot( path=f"screenshots/{account['username']}_to_{username}.png" )
         except:
             log(f'[Main] ERROR! An exception occured while trying to DM {username} using {account["username"]}:{account["password"]}.')
             writeToCSV(
