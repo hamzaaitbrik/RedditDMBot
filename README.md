@@ -19,7 +19,7 @@ Add a UI(User Interface). I haven't started working on this, I think the bot wil
 # How does it work?
 RedditDMBot is a bot made for the purpouse of automating the process of sending messages to Reddit users<br>
 What the bot does:<br>
-0 - The bot checks whether you have a proxy in ```rsrc/config.json```, all actions will be made through the proxy if found. Refer to [rsrc/README](https://github.com/hamzaaitbrik/RedditDMBot/blob/main/rsrc/README.md) to better understand how to properly add a proxy.<br>
+0 - The bot checks whether you have a proxy in ```rsrc/config.json```, all actions will be made through the proxy if found. Refer to [rsrc/README](https://github.com/hamzaaitbrik/RedditDMBot/blob/playwright/rsrc/README.md) to better understand how to properly add a proxy.<br>
 1 - Logs into one of the Reddit account in ```accounts.json```.<br>
 2 - Navigates to chat page.<br>
 3 - Checks if the user already received a message.<br>
