@@ -61,13 +61,13 @@ async def RedditDMBot(account,username):
             if(config['proxy']['proxyRotationLink'] != ''):
                 log('[Main] Rotating proxy IP...')
                 get(config['proxy']['proxyRotationLink'])
-                sleep(uniform(15,20))
+                sleep(config['proxy']['proxyRotationCooldown'])
             await browser.close()
         finally:
             if(config['proxy']['proxyRotationLink'] != ''):
                 log('[Main] Rotating proxy IP...')
                 get(config['proxy']['proxyRotationLink'])
-                sleep(uniform(15,20))
+                sleep(config['proxy']['proxyRotationCooldown'])
             await browser.close()
 
 
