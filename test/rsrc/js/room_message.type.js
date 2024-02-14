@@ -1,1 +1,1 @@
-document.querySelector("body > faceplate-app > rs-app").shadowRoot.querySelector("div.container > rs-room-overlay-manager > rs-room").shadowRoot.querySelector("main > rs-message-composer").shadowRoot.querySelector("form > div > textarea").value = 'pythonisthebestprogramminglanguageever!';
+document.querySelector("body > faceplate-app > rs-app").shadowRoot.querySelector("div.container > rs-room-overlay-manager > rs-room").shadowRoot.querySelector("main > rs-message-composer").shadowRoot.querySelector("form > div > textarea").value = "pythonisthebestprogramminglanguageever!";
