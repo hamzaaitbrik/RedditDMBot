@@ -16,8 +16,8 @@ def log(data):
         with open('log', 'a') as log:
             log.write(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - {data}\n')
 
-def dbToList(list_usernames): # to get all usernames from usernames.csv into list_usernames
-    with open('./db/usernames.csv', 'r') as usernames:
+def dbToList(database,list_usernames): # to get all usernames from usernames.csv into list_usernames
+    with open(database, 'r') as usernames:
         dbReader = reader(usernames, delimiter=',')
         for row in dbReader:
             list_usernames.append(
@@ -37,6 +37,10 @@ def writeToCSV(database,data):
 def getAccounts():
     with open('rdt/accounts.json','r') as accounts:
         return load(accounts)
+
+def getPaths():
+    with open('rsrc/paths.json','r') as config:
+        return load(config)
 
 def getConfig():
     with open('rsrc/config.json','r') as config:
