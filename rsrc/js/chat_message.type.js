@@ -1,1 +1,0 @@
-document.querySelector("body > faceplate-app > rs-app").shadowRoot.querySelector("div.container > rs-direct-chat").shadowRoot.querySelector("section > rs-message-composer").shadowRoot.querySelector("form > div > textarea").value = 'pythonisthebestprogramminglanguageever!';
