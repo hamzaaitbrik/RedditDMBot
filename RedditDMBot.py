@@ -3,7 +3,7 @@ from modules import *
 
 
 # Initializing components
-config, links, locators = getConfig(), getLinks(), getLocators()
+config, links, paths, locators = getConfig(), getLinks(), getPaths(), getLocators()
 list_usernames, usernames_sent = list(), list()
 #
 
@@ -43,7 +43,7 @@ async def RedditDMBot(account,username):
             await page.locator(locators['sendButtonLocator']).click()
             log(f'[Main] Message sent to {username} using {account["username"]}. Writing it to the database...')
             writeToCSV(
-                'db/usernames_sent.csv',
+                paths['usernames_sent'],
                 [
                     username,
                     account['username']
@@ -53,7 +53,7 @@ async def RedditDMBot(account,username):
         except:
             log(f'[Main] ERROR! An exception occured while trying to DM {username} using {account["username"]}:{account["password"]}.')
             writeToCSV(
-                'db/usernames_failed.csv',
+                paths['usernames_failed'],
                 [
                     username,
                     account['username']
@@ -73,7 +73,7 @@ async def RedditDMBot(account,username):
 
 
 def main():
-    dbToList(list_usernames)
+    dbToList(paths['usernames'],list_usernames)
     accounts, used_accounts = getAccounts(), list()
     while(len(list_usernames) != 0): # while there are usernames to send DM to
         username = choice(list_usernames) # getting a random username from the list of usernames to DM
