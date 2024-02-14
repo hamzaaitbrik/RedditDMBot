@@ -3,6 +3,7 @@
         "proxy":"localhost",
         "proxyRotationLink":""
     },
+    "headless":false,
     "cooldown":5,
     "messages":[
         "",
