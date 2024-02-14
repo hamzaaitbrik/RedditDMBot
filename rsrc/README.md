@@ -1,5 +1,5 @@
 Feel free to reach me on Discord @**ozymandiasthegreat** in case you need assistance.<br><br>
-Ignore ```js/*```, ```links.json``` and ```xpath.json```, those aren't meant to be modified.
+Ignore ```links.json``` and ```locators.json```, those aren't meant to be modified.
 # How to change the configuration of the bot?
 The basic configuration that ships with the bot looks like this:
 ```
