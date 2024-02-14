@@ -14,7 +14,7 @@ Add a UI(User Interface). I haven't started working on this, I think the bot wil
 1 - Add accounts to ```rdt/account.json```. Refer to [rdt/README](https://github.com/hamzaaitbrik/RedditDMBot/blob/main/rdt/README.md) to see how to properly add accounts.<br>
 2 - Change what needs to be changed in ```rsrc/config.json```. Refer to [rsrc/README](https://github.com/hamzaaitbrik/RedditDMBot/blob/main/rsrc/README.md) to see how to change values to meet your needs.<br>
 3 - Fill ```db/usernames.csv``` with all the usernames you want to DM.<br>
-4 - Run ```start.py```.
+4 - Run ```RedditDMBot.py```.
 
 # How does it work?
 RedditDMBot is a bot made for the purpouse of automating the process of sending messages to Reddit users<br>
