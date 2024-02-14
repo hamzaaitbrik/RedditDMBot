@@ -36,6 +36,7 @@ async def RedditDMBot(account,username):
             await page.locator(locators['passwordLocator']).fill(account['password'])
             await page.locator(locators['loginButtonLocator']).click()
             sleep(uniform(0.5,1))
+            log(f'[Main] Successfuly logged in to Reddit account {account["username"]}:{account["password"]}')
             await page.goto(f'{links["MESSAGE_URL"]}/{username}')
             sleep(config['cooldown'])
             await page.locator(locators['messageInputLocator']).fill(choice(config['messages']))
