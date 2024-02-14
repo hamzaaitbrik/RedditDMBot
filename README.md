@@ -6,9 +6,6 @@ Changed the technology to [Playwright](https://playwright.dev/python/) for maxim
 There are two version of the bot, [Selenium](https://github.com/hamzaaitbrik/RedditDMBot/tree/selenium) and Playwright. Selenium is tested and working as of 14th of February, 2024.<br>
 This bot was developed on a Linux machine, it may need some modifications to work on a Windows machine. Mainly link structure.
 
-# Updates
-This software is tested on 2nd of February, 2024. It is working..<br>
-
 # In progress
 Add a UI(User Interface). I haven't started working on this, I think the bot will remain a CLI-only tool for now.
 
