@@ -1,7 +1,6 @@
 Feel free to contribute to this project or suggest more features to add. You can reach me on Discord @**ozymandiasthegreat**.
 # What's new?
-Multi-accounting implemented in Python.<br>
-Added proxy support. You can now use the bot with a proxy.
+Changed the technology to [Playwright](https://playwright.dev/python/) for maximum efficiency.
 
 # Importnat
 This bot was developed on a Linux machine, it may need some modifications to work on a Windows machine. Mainly link structure.
