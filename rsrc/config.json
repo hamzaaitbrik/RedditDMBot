@@ -4,8 +4,8 @@
         "proxyRotationLink":"",
         "proxyRotationCooldown":20
     },
-    "headless":false,
     "cooldown":5,
+    "headless":false,
     "messages":[
         "",
         ""
