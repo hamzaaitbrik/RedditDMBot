@@ -1,0 +1,7 @@
+{
+    "usernameLocator":"#loginUsername",
+    "passwordLocator":"#loginPassword",
+    "loginButtonLocator":"body > div > main > div.OnboardingStep.Onboarding__step.mode-auth > div > div.Step__content > form > fieldset:nth-child(8) > button",
+    "messageInputLocator":"body > faceplate-app > rs-app div.container > rs-direct-chat section > rs-message-composer form > div > textarea",
+    "sendButtonLocator":"body > faceplate-app > rs-app div.container > rs-direct-chat section > rs-message-composer form > button.button-send.button-medium.px-\\[length\\:var\\(--rem8\\)\\].button-plain.icon.button.inline-flex.items-center.justify-center"
+}
