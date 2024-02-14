@@ -17,12 +17,21 @@ def log(data):
         with open('log', 'a') as log:
             log.write(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - {data}\n')
 
+def dbToList(list_usernames): # to get all usernames from usernames.csv into list_usernames
+    with open('./db/usernames.csv', 'r') as usernames:
+        dbReader = reader(usernames, delimiter=',')
+        for row in dbReader:
+            list_usernames.append(
+                str(row[0])
+            )
+
 def writeToCSV(data):
     with open(f'./db/usernames_sent.csv', 'a', newline='', encoding='utf-8') as db:
         _writer = writer(db)
         _writer.writerow(
             [
-                data
+                data[0],
+                data[1]
             ]
         )
 
