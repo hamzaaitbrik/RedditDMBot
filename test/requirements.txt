@@ -1,0 +1,3 @@
+requests
+playwright
+playwright-stealth
