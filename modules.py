@@ -34,8 +34,8 @@ def getConfig():
     with open('rsrc/config.json','r') as config:
         return load(config)
 
-def getXpath():
-    with open('rsrc/xpath.json','r') as xpath:
+def getLocators():
+    with open('rsrc/locators.json','r') as xpath:
         return load(xpath)
 
 def getLinks():
