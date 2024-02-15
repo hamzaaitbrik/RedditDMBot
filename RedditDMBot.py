@@ -35,20 +35,32 @@ async def RedditDMBot(account,username):
             await page.locator(locators['usernameLocator']).fill(account['username'])
             await page.locator(locators['passwordLocator']).fill(account['password'])
             await page.locator(locators['loginButtonLocator']).click()
-            sleep(uniform(0.5,1))
+            sleep(uniform(1.5,2))
             log(f'[Main] Successfuly logged in to Reddit account {account["username"]}:{account["password"]}')
             await page.goto(f'{links["MESSAGE_URL"]}/{username}')
             sleep(config['cooldown'])
             await page.locator(locators['messageInputLocator']).fill(choice(config['messages']))
             await page.locator(locators['sendButtonLocator']).click()
-            log(f'[Main] Message sent to {username} using {account["username"]}. Writing it to the database...')
-            writeToCSV(
-                paths['usernames_sent'],
-                [
-                    username,
-                    account['username']
-                ]
-            )
+            sleep(1)
+            try:
+                page.locator(locators['unableToDM'])
+                log(f'[Main] {account["username"]} was unable to send DM. Writing it to the database...')
+                writeToCSV(
+                    paths['toss_accounts'],
+                    [
+                        account['username'],
+                        account['password']
+                    ]
+                )
+            except:
+                log(f'[Main] Message sent to {username} using {account["username"]}. Writing it to the database...')
+                writeToCSV(
+                    paths['usernames_sent'],
+                    [
+                        username,
+                        account['username']
+                    ]
+                )
             await page.screenshot( path=f"screenshots/{account['username']}_to_{username}.png" )
         except:
             log(f'[Main] ERROR! An exception occured while trying to DM {username} using {account["username"]}:{account["password"]}.')
