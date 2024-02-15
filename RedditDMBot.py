@@ -17,6 +17,11 @@ async def RedditDMBot(used_accounts,account,username):
             browser = await playwright.chromium.launch(
                 headless = config['headless']
             )
+            ip = loads(
+                get(
+                    links['getConnectionIP']
+                ).text
+            )['origin']
         else:
             browser = await playwright.chromium.launch(
                 headless = config['headless'],
@@ -26,6 +31,15 @@ async def RedditDMBot(used_accounts,account,username):
                     "password":config['proxy']['proxy'].split(':')[3]
                 }
             )
+            ip = loads(
+                get(
+                    links['getConnectionIP'],
+                    proxies={
+                        'http':f"http://{config['proxy']['proxy'].split(':')[2]}:{config['proxy']['proxy'].split(':')[3]}@{config['proxy']['proxy'].split(':')[0]}:{config['proxy']['proxy'].split(':')[1]}",
+                        "https":f"http://{config['proxy']['proxy'].split(':')[2]}:{config['proxy']['proxy'].split(':')[3]}@{config['proxy']['proxy'].split(':')[0]}:{config['proxy']['proxy'].split(':')[1]}"
+                    }
+                ).text
+            )['origin']
         context = await browser.new_context(**device)
         page = await context.new_page()
         await stealth_async(page)
@@ -36,7 +50,7 @@ async def RedditDMBot(used_accounts,account,username):
             await page.locator(locators['passwordLocator']).fill(account['password'])
             await page.locator(locators['loginButtonLocator']).click()
             sleep(uniform(1.5,2))
-            log(f'[Main] Successfuly logged in to Reddit account {account["username"]}:{account["password"]}')
+            log(f'[Main] Successfuly logged in to Reddit account {account["username"]}:{account["password"]} through {ip}')
             await page.goto(f'{links["MESSAGE_URL"]}/{username}')
             sleep(config['cooldown'])
             await page.locator(locators['messageInputLocator']).fill(choice(config['messages']))
