@@ -1,6 +1,6 @@
 from requests import get
 from csv import reader, writer
-from json import load
+from json import load, loads
 import asyncio
 from playwright.async_api import async_playwright
 from playwright_stealth import stealth_async
