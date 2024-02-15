@@ -55,7 +55,7 @@ async def RedditDMBot(accounts,used_accounts,account,username):
                 accounts.remove(account)
                 await page.screenshot( path=f"screenshots/failed/{account['username']}_to_{username}|{page.locator(locators['authorLocator']).get_attribute('title')}.png" )
             except:
-                log(f'[Main] Message sent to {username} using {account["username"]}. Writing it to the database...')
+                log(f'[Main] Message sent to {username}|{page.locator(locators["authorLocator"]).get_attribute("title")} using {account["username"]}. Writing it to the database...')
                 writeToCSV(
                     paths['usernames_sent'],
                     [
@@ -67,7 +67,7 @@ async def RedditDMBot(accounts,used_accounts,account,username):
                 list_usernames.remove(username) # removing that username from the list of usernames to DM
                 used_accounts.append(account) # adding account to the list of used accounts
         except:
-            log(f'[Main] ERROR! An exception occured while trying to DM {username} using {account["username"]}:{account["password"]}.')
+            log(f'[Main] ERROR! An exception occured while trying to DM {username}|{page.locator(locators["authorLocator"]).get_attribute("title")} using {account["username"]}:{account["password"]}.')
             writeToCSV(
                 paths['usernames_failed'],
                 [
