@@ -10,7 +10,7 @@ list_usernames, usernames_sent = list(), list()
 
 
 
-async def RedditDMBot(accounts,used_accounts,account,username):
+async def RedditDMBot(used_accounts,account,username):
     async with async_playwright() as playwright:
         device = playwright.devices['Desktop Chrome']
         if(config['proxy']['proxy'] == 'localhost'):
@@ -41,7 +41,7 @@ async def RedditDMBot(accounts,used_accounts,account,username):
             sleep(config['cooldown'])
             await page.locator(locators['messageInputLocator']).fill(choice(config['messages']))
             await page.locator(locators['sendButtonLocator']).click()
-            sleep(1)
+            sleep(uniform(1,2))
             try:
                 page.locator(locators['unableToDMLocator'])
                 log(f'[Main] {account["username"]} was unable to send DM. Writing it to the database...')
@@ -52,10 +52,9 @@ async def RedditDMBot(accounts,used_accounts,account,username):
                         account['password']
                     ]
                 )
-                accounts.remove(account)
-                await page.screenshot( path=f"screenshots/failed/{account['username']}_to_{username}|{page.locator(locators['authorLocator']).get_attribute('title')}.png" )
+                await page.screenshot( path=f"screenshots/failed/{account['username']}_to_{username}#{await page.locator(locators['receiverLocator']).get_attribute('title')}.png" )
             except:
-                log(f'[Main] Message sent to {username}|{page.locator(locators["authorLocator"]).get_attribute("title")} using {account["username"]}. Writing it to the database...')
+                log(f'[Main] Message sent to {username}#{await page.locator(locators["receiverLocator"]).get_attribute("title")} using {account["username"]}. Writing it to the database...')
                 writeToCSV(
                     paths['usernames_sent'],
                     [
@@ -63,11 +62,11 @@ async def RedditDMBot(accounts,used_accounts,account,username):
                         account['username']
                     ]
                 )
-                await page.screenshot( path=f"screenshots/succeeded/{account['username']}_to_{username}|{page.locator(locators['authorLocator']).get_attribute('title')}.png" )
+                await page.screenshot( path=f"screenshots/succeeded/{account['username']}_to_{username}#{await page.locator(locators['receiverLocator']).get_attribute('title')}.png" )
                 list_usernames.remove(username) # removing that username from the list of usernames to DM
                 used_accounts.append(account) # adding account to the list of used accounts
         except:
-            log(f'[Main] ERROR! An exception occured while trying to DM {username}|{page.locator(locators["authorLocator"]).get_attribute("title")} using {account["username"]}:{account["password"]}.')
+            log(f'[Main] ERROR! An exception occured while trying to DM {username}#{page.locator(locators["receiverLocator"]).get_attribute("title")} using {account["username"]}:{account["password"]}.')
             writeToCSV(
                 paths['usernames_failed'],
                 [
@@ -96,7 +95,7 @@ def main():
         if(len(accounts) == 0): # to check if all accounts are used
             accounts, used_accounts = used_accounts, list() # repopulates accounts with used_accounts and reinitialize used_accounts to an empty list
         account = accounts.pop(0) # getting the first account of the list accounts, then removing it
-        asyncio.run(RedditDMBot(accounts,used_accounts,account,username)) # entry point
+        asyncio.run(RedditDMBot(used_accounts,account,username)) # entry point
 
 
 
