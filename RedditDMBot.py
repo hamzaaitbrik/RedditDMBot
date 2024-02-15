@@ -53,7 +53,7 @@ async def RedditDMBot(accounts,used_accounts,account,username):
                     ]
                 )
                 accounts.remove(account)
-                await page.screenshot( path=f"screenshots/failed/{account['username']}_to_{username}|{page.locator(locators['authorLocator']).get_attribute('title')}.png" )
+                await page.screenshot( path=f"screenshots/failed/{account['username']}_to_{username}|{page.locator(locators['authorLocator']).get_attribute('title')}.png")
             except:
                 log(f'[Main] Message sent to {username} using {account["username"]}. Writing it to the database...')
                 writeToCSV(
@@ -63,7 +63,7 @@ async def RedditDMBot(accounts,used_accounts,account,username):
                         account['username']
                     ]
                 )
-                await page.screenshot( path=f"screenshots/succeeded/{account['username']}_to_{username}|{page.locator(locators['authorLocator']).get_attribute('title')}.png" )
+                await page.screenshot( path=f"screenshots/succeeded/{account['username']}_to_{username}|{page.locator(locators['authorLocator']).get_attribute('title')}.png")
                 used_accounts.append(account)
             await page.screenshot( path=f"screenshots/{account['username']}_to_{username}.png" )
         except:
