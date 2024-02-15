@@ -66,7 +66,7 @@ async def RedditDMBot(used_accounts,account,username):
                 list_usernames.remove(username) # removing that username from the list of usernames to DM
                 used_accounts.append(account) # adding account to the list of used accounts
         except:
-            log(f'[Main] ERROR! An exception occured while trying to DM {username}#{page.locator(locators["receiverLocator"]).get_attribute("title")} using {account["username"]}:{account["password"]}.')
+            log(f'[Main] ERROR! An exception occured while trying to DM {username}#{await page.locator(locators["receiverLocator"]).get_attribute("title")} using {account["username"]}:{account["password"]}.')
             writeToCSV(
                 paths['usernames_failed'],
                 [
