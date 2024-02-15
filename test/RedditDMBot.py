@@ -64,10 +64,11 @@ async def RedditDMBot(accounts,used_accounts,account,username):
                     ]
                 )
                 await page.screenshot( path=f"screenshots/succeeded/{account['username']}_to_{username}|{page.locator(locators['authorLocator']).get_attribute('title')}.png")
-                used_accounts.append(account)
-            await page.screenshot( path=f"screenshots/{account['username']}_to_{username}.png" )
+                list_usernames.remove(username) # removing that username from the list of usernames to DM
+                used_accounts.append(account) # adding account to the list of used accounts
         except:
             log(f'[Main] ERROR! An exception occured while trying to DM {username} using {account["username"]}:{account["password"]}.')
+            await page.screenshot( path=f"screenshots/error/{account['username']}_to_{username}" )
             writeToCSV(
                 paths['usernames_failed'],
                 [
@@ -97,7 +98,6 @@ def main():
             accounts, used_accounts = used_accounts, list() # repopulates accounts with used_accounts and reinitialize used_accounts to an empty list
         account = accounts.pop(0) # getting the first account of the list accounts, then removing it
         asyncio.run(RedditDMBot(accounts,used_accounts,account,username)) # entry point
-        list_usernames.remove(username) # removing that username from the list of usernames to DM
 
 
 
