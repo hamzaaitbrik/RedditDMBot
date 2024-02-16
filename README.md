@@ -3,7 +3,7 @@ Feel free to contribute to this project or suggest more features to add. You can
 Changed the technology to [Playwright](https://playwright.dev/python/) for maximum efficiency.
 
 # Importnat
-There are two version of the bot, [Selenium](https://github.com/hamzaaitbrik/RedditDMBot/tree/selenium) and [Playwright](https://github.com/hamzaaitbrik/RedditDMBot). Both versions of the bot are tested 14th of February, 2024; both are working. **Playwright version performs better than Selenium.**<br>
+There are two versions of the bot, [Selenium](https://github.com/hamzaaitbrik/RedditDMBot/tree/selenium) and [Playwright](https://github.com/hamzaaitbrik/RedditDMBot). Both versions of the bot are tested 14th of February, 2024; both are working. **Playwright version performs better than Selenium.**<br>
 This bot was developed on a Linux machine, it may need some modifications to work on a Windows machine. Mainly link structure.
 
 # In progress
