@@ -41,7 +41,7 @@ async def RedditDMBot(used_accounts,account,username):
                 ).text
             )['origin']
         context = await browser.new_context(**device)
-        context.set_default_timeout(5000)
+        #context.set_default_timeout(5000)
         page = await context.new_page()
         await stealth_async(page)
         try:
@@ -59,7 +59,7 @@ async def RedditDMBot(used_accounts,account,username):
             await page.locator(locators['sendButtonLocator']).click()
             sleep(uniform(1,2))
             try:
-                await page.locator(locators['unableToDMCloseLocator']).click()
+                await page.locator(locators['unableToDMCloseLocator']).click( timeout = 2000 )
                 log(f'[Main] {account["username"]} was unable to send DM. Writing it to the database...')
                 writeToCSV(
                     paths['toss_accounts'],
