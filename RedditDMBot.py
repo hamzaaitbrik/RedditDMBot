@@ -41,6 +41,7 @@ async def RedditDMBot(used_accounts,account,username):
                 ).text
             )['origin']
         context = await browser.new_context(**device)
+        context.set_default_timeout(5000)
         page = await context.new_page()
         await stealth_async(page)
         try:
@@ -49,15 +50,16 @@ async def RedditDMBot(used_accounts,account,username):
             await page.locator(locators['usernameLocator']).fill(account['username'])
             await page.locator(locators['passwordLocator']).fill(account['password'])
             await page.locator(locators['loginButtonLocator']).click()
-            sleep(uniform(1.5,2))
+            sleep(uniform(2,3))
             log(f'[Main] Successfuly logged in to Reddit account {account["username"]}:{account["password"]} through {ip}')
             await page.goto(f'{links["MESSAGE_URL"]}/{username}')
             sleep(config['cooldown'])
             await page.locator(locators['messageInputLocator']).fill(choice(config['messages']))
+            #async with page.expect_response(f'{links["MESSAGE_URL"]}/{username}') as response:
             await page.locator(locators['sendButtonLocator']).click()
             sleep(uniform(1,2))
             try:
-                page.locator(locators['unableToDMLocator'])
+                await page.locator(locators['unableToDMCloseLocator']).click()
                 log(f'[Main] {account["username"]} was unable to send DM. Writing it to the database...')
                 writeToCSV(
                     paths['toss_accounts'],
@@ -66,9 +68,9 @@ async def RedditDMBot(used_accounts,account,username):
                         account['password']
                     ]
                 )
-                await page.screenshot( path=f"screenshots/failed/{account['username']}_to_{username}#{await page.locator(locators['receiverLocator']).get_attribute('title')}.png" )
+                await page.screenshot( path=f"screenshots/failed/{account['username']}_to_{username}#{await page.locator(locators['chatReceiverLocator']).get_attribute('title')}.png" )
             except:
-                log(f'[Main] Message sent to {username}#{await page.locator(locators["receiverLocator"]).get_attribute("title")} using {account["username"]}. Writing it to the database...')
+                log(f'[Main] Message sent to {username}#{await page.locator(locators["roomReceiverLocator"]).get_attribute("title")} using {account["username"]}. Writing it to the database...')
                 writeToCSV(
                     paths['usernames_sent'],
                     [
@@ -76,11 +78,11 @@ async def RedditDMBot(used_accounts,account,username):
                         account['username']
                     ]
                 )
-                await page.screenshot( path=f"screenshots/succeeded/{account['username']}_to_{username}#{await page.locator(locators['receiverLocator']).get_attribute('title')}.png" )
+                await page.screenshot( path=f"screenshots/succeeded/{account['username']}_to_{username}#{await page.locator(locators['roomReceiverLocator']).get_attribute('title')}.png" )
                 list_usernames.remove(username) # removing that username from the list of usernames to DM
                 used_accounts.append(account) # adding account to the list of used accounts
         except:
-            log(f'[Main] ERROR! An exception occured while trying to DM {username}#{await page.locator(locators["receiverLocator"]).get_attribute("title")} using {account["username"]}:{account["password"]}.')
+            log(f'[Main] ERROR! An exception occured while trying to DM {username} using {account["username"]}:{account["password"]}.')
             writeToCSV(
                 paths['usernames_failed'],
                 [
