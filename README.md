@@ -1,5 +1,5 @@
-Feel free to contribute to this project or suggest more features to add. You can reach me on Discord @**ozymandiasthegreat**.<br>
-**[Click here](https://discord.gg/Y5NeDy5XXT) to join the Discord server for this project, let's connect!**
+**[Click here](https://discord.gg/Y5NeDy5XXT) to join the Discord server for this project, let's connect!**<br><br>
+Feel free to contribute to this project or suggest more features to add. You can reach me on Discord @**ozymandiasthegreat**.
 # What's new?
 Changed the technology to [Playwright](https://playwright.dev/python/) for maximum efficiency.
 
