@@ -68,7 +68,7 @@ async def RedditDMBot(used_accounts,account,username):
                         account['password']
                     ]
                 )
-                await page.screenshot( path=f"screenshots/failed/{account['username']}_to_{username}#{await page.locator(locators['chatReceiverLocator']).get_attribute('title')}.png" )
+                await page.screenshot( path=f"results/failed/{account['username']}_to_{username}#{await page.locator(locators['chatReceiverLocator']).get_attribute('title')}.png" )
             except:
                 log(f'[Main] Message sent to {username}#{await page.locator(locators["roomReceiverLocator"]).get_attribute("title")} using {account["username"]}. Writing it to the database...')
                 writeToCSV(
@@ -78,7 +78,7 @@ async def RedditDMBot(used_accounts,account,username):
                         account['username']
                     ]
                 )
-                await page.screenshot( path=f"screenshots/succeeded/{account['username']}_to_{username}#{await page.locator(locators['roomReceiverLocator']).get_attribute('title')}.png" )
+                await page.screenshot( path=f"results/succeeded/{account['username']}_to_{username}#{await page.locator(locators['roomReceiverLocator']).get_attribute('title')}.png" )
                 list_usernames.remove(username) # removing that username from the list of usernames to DM
                 used_accounts.append(account) # adding account to the list of used accounts
         except:
