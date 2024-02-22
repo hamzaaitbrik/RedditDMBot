@@ -110,8 +110,13 @@ def main():
         username = choice(list_usernames) # getting a random username from the list of usernames to DM
         if(len(accounts) == 0): # to check if all accounts are used
             accounts, used_accounts = used_accounts, list() # repopulates accounts with used_accounts and reinitialize used_accounts to an empty list
-        account = accounts.pop(0) # getting the first account of the list accounts, then removing it
+        try:
+            account = accounts.pop(0) # getting the first account of the list accounts, then removing it
+        except IndexError:
+            log('[Main] There are no more useful accounts to use.')
+            break
         asyncio.run(RedditDMBot(used_accounts,account,username)) # entry point
+    log('[Main] Done.')
 
 
 
