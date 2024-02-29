@@ -32,7 +32,7 @@ What the bot does:<br>
 9 - If there are no many available accounts, the bot reuses the used accounts until all users on your ```db/usernames.csv``` received DMs.
 
 # In action!
+![In action!](https://github.com/hamzaaitbrik/RedditDMBot/blob/playwright/media/InAction!.png "In action!")
 
-
-<br><br><br>
+<br><br>
 Enjoy!
