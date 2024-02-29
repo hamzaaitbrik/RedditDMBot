@@ -31,6 +31,8 @@ What the bot does:<br>
 8 - Logs into another Reddit account that wasn't used.<br>
 9 - If there are no many available accounts, the bot reuses the used accounts until all users on your ```db/usernames.csv``` received DMs.
 
+# In action!
+
 
 <br><br><br>
 Enjoy!
