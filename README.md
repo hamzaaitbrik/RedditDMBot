@@ -1,4 +1,6 @@
 **[Click here](https://discord.gg/Y5NeDy5XXT) to join the Discord server for this project, let's connect!**<br><br>
+**[Click here](https://t.me/RedditDMBot) to join the Telegram channel for this project, in case Discord server goes down. Let's connect!**<br>
+
 Feel free to contribute to this project or suggest more features to add. You can reach me on Discord @**ozymandiasthegreat**.
 # What's new?
 Changed the technology to [Playwright](https://playwright.dev/python/) for maximum efficiency.
