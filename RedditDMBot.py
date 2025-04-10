@@ -25,11 +25,11 @@ class Modules:
         """
         
         # managing different inputs to output them in different colors
-        if(index == -1): # neutral input, no color
+        if index == -1: # neutral input, no color
             print(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - {data}')
-        elif(index == 0): # success input, green
+        elif index == 0: # success input, green
             print(f'{Modules.Format["GREEN"]}[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - {data}{Modules.Format["END"]}')
-        elif(index == 1): # error input, yellow
+        elif index == 1: # error input, yellow
             print(f'{Modules.Format["YELLOW"]}[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - {data}{Modules.Format["END"]}')
         elif(index == 2): # fatal error input, red
             print(f'{Modules.Format["RED"]}[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - {data}{Modules.Format["END"]}')
@@ -68,7 +68,7 @@ class Modules:
         """
         try:
 
-            if(index == 0): # removing proxy
+            if index == 0: # removing proxy
 
                 proxyList, proxy_backend = proxy.split(':'), str()
                 host, port, username, password = proxyList[0], proxyList[1], proxyList[2], proxyList[3]
@@ -79,7 +79,7 @@ class Modules:
                     proxy_backend_js.write(proxy_backend)
                 Modules.log(0, f'[RedditDMBot] - Proxy {proxy} was removed successfully.')
 
-            elif(index == 1): # adding proxy
+            elif index == 1: # adding proxy
 
                 proxyList, proxy_backend = proxy.split(':'), str()
                 host, port, username, password = proxyList[0], proxyList[1], proxyList[2], proxyList[3]
@@ -175,7 +175,7 @@ async def RedditDMBot(
         #browser_config.browser_args = config['browser_args']
 
         # changing proxy configuration to add to the browser
-        if(proxy != 'localhost'): # in case there are proxies for the software to use
+        if proxy != 'localhost': # in case there are proxies for the software to use
 
             Modules.manageProxyExtension(
                 index = 1,
