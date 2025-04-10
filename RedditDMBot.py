@@ -250,18 +250,17 @@ async def RedditDMBot(
 
             sleep(500)
 
-        except: # in case of other error
 
-            Modules.log(2, f'[RedditDMBot] - An error occured while trying to login to Reddit account {account["username"]}:{account["password"]} @ {ip}.')
+        except Exception as e: # in case of other error
+            Modules.log(2, f'[RedditDMBot] - An error occured while trying to login to Reddit account {account["username"]}:{account["password"]} @ {ip}. Exception: {e}')
         
         try:
 
             await instance.find('Logged in as', best_match = True, timeout = 10)
             Modules.log(0, f'[RedditDMBot] - Successfully logged in to Reddit account {account["username"]}:{account["password"]} @ {ip}.')
 
-        except:
-            
-            Modules.log(2, f'[RedditDMBot] - Unable to log in into account {account["username"]}:{account["password"]} @ {ip}. Exiting.')
+        except Exception as e:
+            Modules.log(2, f'[RedditDMBot] - Unable to log in into account {account["username"]}:{account["password"]} @ {ip}. Exiting. Exception: {e}')
             return
 
         sleep(config['cooldown'])
@@ -279,10 +278,13 @@ async def RedditDMBot(
         await instance.get(f'{links["REDDIT_MESSAGE_PAGE_URL"]}/{target_id}')
 
         sleep(config['cooldown'])
-        
+
+        # Get a random message from the config
+        random_message = random.choice(config["messages"])
+
         # writing the message
         message_input = await instance.find('Message', best_match = True)
-        await message_input.send_keys('HELLOOOOOOO')
+        await message_input.send_keys(random_message)
 
         send_message_button = await instance.find('Send message', best_match = True)
         await send_message_button.click()
@@ -333,14 +335,13 @@ async def RedditDMBot(
         sleep(500)
         sleep(config['cooldown'])
 
-    except:
-        
-        await Modules.log(2, f'[RedditDMBot] - An error occured while trying to DM {target} with Reddit account {account["username"]}:{account["password"]} @ {ip}.')
+    except Exception as e:
+        Modules.log(2, f'[RedditDMBot] - An error occured while trying to DM {target} with Reddit account {account["username"]}:{account["password"]} @ {ip}. Exception: {e}')
 
     finally: # finally rotating proxy IP if a rotation link exists
 
-        if(config['proxy']['proxy_type'] == 'rotative'):
-            if(config['proxy']['proxy_rotation_link'] != ''):
+        if config['proxy']['proxy_type'] == 'rotative':
+            if config['proxy']['proxy_rotation_link'] != '':
                 Modules.log(-1, '[RedditDMBot] Rotating proxy IP...')
                 get(config['proxy']['proxy_rotation_link'])
                 sleep(config['proxy']['proxy_rotation_link'])
