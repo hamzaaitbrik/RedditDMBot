@@ -161,6 +161,7 @@ async def RedditDMBot(
     """
         main function responsible for sending a DM
     """
+    instance = None  # Initialize first
     try:
         # initializing a config instance for the browser
         browser_config = nodriver.Config(
@@ -348,7 +349,8 @@ async def RedditDMBot(
                 exit()
 
         # closing the instance and the browser
-        await instance.close()
+        if instance:
+            await instance.close()
         #await browser.stop()
 
         sleep(config['cooldown'])
@@ -369,12 +371,12 @@ if __name__ == '__main__': # software entry point
 
     accounts, used_accounts, toss_accounts = Modules.getAccounts(), list(), list()
 
-    while(len(list_usernames) != 0): # while there are usernames to send DM to
+    while len(list_usernames) != 0: # while there are usernames to send DM to
 
         username = choice(list_usernames) # getting a random username from the list of usernames to DM
 
         # choosing an account to send the DM with
-        if(len(accounts) == 0): # to check if all accounts are used
+        if len(accounts) == 0: # to check if all accounts are used
             accounts, used_accounts = used_accounts, list() # repopulates accounts with used_accounts and reinitialize used_accounts to an empty list
         try:
             account = accounts.pop(0) # getting the first account of the list accounts, then removing it
@@ -383,14 +385,14 @@ if __name__ == '__main__': # software entry point
             break
 
         # choosing a proxy to use
-        if(config['proxy']['proxy_type'] == 'localhost'): proxy = 'localhost'
-        elif(config['proxy']['proxy_type'] == 'sticky'):
+        proxy = 'localhost'
+        if config['proxy']['proxy_type'] == 'sticky':
             try:
                 proxy = proxies_pool['sticky'].pop(0)
             except IndexError:
                 Modules.log(1, '[RedditDMBot] There are no more useful proxies to use.')
                 break
-        elif(config['proxy']['proxy_type'] == 'rotative'):
+        elif config['proxy']['proxy_type'] == 'rotative':
             proxy = proxies_pool['rotative'][0]
 
         asyncio.run(

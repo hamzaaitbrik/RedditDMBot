@@ -1,0 +1,7 @@
+{
+  "proxy": {
+    "proxy_type": "localhost",
+    "proxyRotationLink": "",
+    "proxyRotationCooldown": 20
+  }
+}
