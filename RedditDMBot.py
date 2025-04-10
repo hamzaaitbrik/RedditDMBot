@@ -25,11 +25,11 @@ class Modules:
         """
         
         # managing different inputs to output them in different colors
-        if(index == -1): # neutral input, no color
+        if index == -1: # neutral input, no color
             print(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - {data}')
-        elif(index == 0): # success input, green
+        elif index == 0: # success input, green
             print(f'{Modules.Format["GREEN"]}[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - {data}{Modules.Format["END"]}')
-        elif(index == 1): # error input, yellow
+        elif index == 1: # error input, yellow
             print(f'{Modules.Format["YELLOW"]}[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - {data}{Modules.Format["END"]}')
         elif(index == 2): # fatal error input, red
             print(f'{Modules.Format["RED"]}[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - {data}{Modules.Format["END"]}')
@@ -68,7 +68,7 @@ class Modules:
         """
         try:
 
-            if(index == 0): # removing proxy
+            if index == 0: # removing proxy
 
                 proxyList, proxy_backend = proxy.split(':'), str()
                 host, port, username, password = proxyList[0], proxyList[1], proxyList[2], proxyList[3]
@@ -79,7 +79,7 @@ class Modules:
                     proxy_backend_js.write(proxy_backend)
                 Modules.log(0, f'[RedditDMBot] - Proxy {proxy} was removed successfully.')
 
-            elif(index == 1): # adding proxy
+            elif index == 1: # adding proxy
 
                 proxyList, proxy_backend = proxy.split(':'), str()
                 host, port, username, password = proxyList[0], proxyList[1], proxyList[2], proxyList[3]
@@ -161,6 +161,7 @@ async def RedditDMBot(
     """
         main function responsible for sending a DM
     """
+    instance = None  # Initialize first
     try:
         # initializing a config instance for the browser
         browser_config = nodriver.Config(
@@ -174,7 +175,7 @@ async def RedditDMBot(
         #browser_config.browser_args = config['browser_args']
 
         # changing proxy configuration to add to the browser
-        if(proxy != 'localhost'): # in case there are proxies for the software to use
+        if proxy != 'localhost': # in case there are proxies for the software to use
 
             Modules.manageProxyExtension(
                 index = 1,
@@ -249,18 +250,17 @@ async def RedditDMBot(
 
             sleep(500)
 
-        except: # in case of other error
 
-            Modules.log(2, f'[RedditDMBot] - An error occured while trying to login to Reddit account {account["username"]}:{account["password"]} @ {ip}.')
+        except Exception as e: # in case of other error
+            Modules.log(2, f'[RedditDMBot] - An error occured while trying to login to Reddit account {account["username"]}:{account["password"]} @ {ip}. Exception: {e}')
         
         try:
 
             await instance.find('Logged in as', best_match = True, timeout = 10)
             Modules.log(0, f'[RedditDMBot] - Successfully logged in to Reddit account {account["username"]}:{account["password"]} @ {ip}.')
 
-        except:
-            
-            Modules.log(2, f'[RedditDMBot] - Unable to log in into account {account["username"]}:{account["password"]} @ {ip}. Exiting.')
+        except Exception as e:
+            Modules.log(2, f'[RedditDMBot] - Unable to log in into account {account["username"]}:{account["password"]} @ {ip}. Exiting. Exception: {e}')
             return
 
         sleep(config['cooldown'])
@@ -278,10 +278,13 @@ async def RedditDMBot(
         await instance.get(f'{links["REDDIT_MESSAGE_PAGE_URL"]}/{target_id}')
 
         sleep(config['cooldown'])
-        
+
+        # Get a random message from the config
+        random_message = random.choice(config["messages"])
+
         # writing the message
         message_input = await instance.find('Message', best_match = True)
-        await message_input.send_keys('HELLOOOOOOO')
+        await message_input.send_keys(random_message)
 
         send_message_button = await instance.find('Send message', best_match = True)
         await send_message_button.click()
@@ -332,14 +335,13 @@ async def RedditDMBot(
         sleep(500)
         sleep(config['cooldown'])
 
-    except:
-        
-        await Modules.log(2, f'[RedditDMBot] - An error occured while trying to DM {target} with Reddit account {account["username"]}:{account["password"]} @ {ip}.')
+    except Exception as e:
+        Modules.log(2, f'[RedditDMBot] - An error occured while trying to DM {target} with Reddit account {account["username"]}:{account["password"]} @ {ip}. Exception: {e}')
 
     finally: # finally rotating proxy IP if a rotation link exists
 
-        if(config['proxy']['proxy_type'] == 'rotative'):
-            if(config['proxy']['proxy_rotation_link'] != ''):
+        if config['proxy']['proxy_type'] == 'rotative':
+            if config['proxy']['proxy_rotation_link'] != '':
                 Modules.log(-1, '[RedditDMBot] Rotating proxy IP...')
                 get(config['proxy']['proxy_rotation_link'])
                 sleep(config['proxy']['proxy_rotation_link'])
@@ -348,7 +350,8 @@ async def RedditDMBot(
                 exit()
 
         # closing the instance and the browser
-        await instance.close()
+        if instance:
+            await instance.close()
         #await browser.stop()
 
         sleep(config['cooldown'])
@@ -369,12 +372,12 @@ if __name__ == '__main__': # software entry point
 
     accounts, used_accounts, toss_accounts = Modules.getAccounts(), list(), list()
 
-    while(len(list_usernames) != 0): # while there are usernames to send DM to
+    while len(list_usernames) != 0: # while there are usernames to send DM to
 
         username = choice(list_usernames) # getting a random username from the list of usernames to DM
 
         # choosing an account to send the DM with
-        if(len(accounts) == 0): # to check if all accounts are used
+        if len(accounts) == 0: # to check if all accounts are used
             accounts, used_accounts = used_accounts, list() # repopulates accounts with used_accounts and reinitialize used_accounts to an empty list
         try:
             account = accounts.pop(0) # getting the first account of the list accounts, then removing it
@@ -383,14 +386,14 @@ if __name__ == '__main__': # software entry point
             break
 
         # choosing a proxy to use
-        if(config['proxy']['proxy_type'] == 'localhost'): proxy = 'localhost'
-        elif(config['proxy']['proxy_type'] == 'sticky'):
+        proxy = 'localhost'
+        if config['proxy']['proxy_type'] == 'sticky':
             try:
                 proxy = proxies_pool['sticky'].pop(0)
             except IndexError:
                 Modules.log(1, '[RedditDMBot] There are no more useful proxies to use.')
                 break
-        elif(config['proxy']['proxy_type'] == 'rotative'):
+        elif config['proxy']['proxy_type'] == 'rotative':
             proxy = proxies_pool['rotative'][0]
 
         asyncio.run(

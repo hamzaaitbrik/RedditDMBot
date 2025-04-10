@@ -6,3 +6,4 @@ import nodriver
 from datetime import datetime
 from time import sleep
 from random import uniform, randint, choice
+import random
