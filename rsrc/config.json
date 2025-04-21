@@ -1,11 +1,18 @@
 {
     "proxy":{
-        "proxy":"localhost",
-        "proxyRotationLink":"",
-        "proxyRotationCooldown":20
+        "proxy_type":"localhost",
+        "proxy_rotation_link":"",
+        "proxy_rotation_cooldown":20
     },
-    "cooldown":5,
+    "cooldown":3.5,
     "headless":false,
+    "browser_args":[
+        "--start-maximized",
+        "--disable-background-networking",
+        "--disable-sync",
+        "--blink-settings=imagesEnabled=false",
+        "--disable-features=OptimizationGuideModelDownloading,OptimizationHintsFetching,OptimizationTargetPrediction,OptimizationHints"
+    ],
     "messages":[
         "",
         ""
