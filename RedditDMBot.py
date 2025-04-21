@@ -163,7 +163,7 @@ async def RedditDMBot(
     """
     try:
         # initializing a config instance for the browser
-        browser_config = nodriver.Config(
+        browser_config = zendriver.Config(
             browser_args = config['browser_args']
         )
 
@@ -210,57 +210,64 @@ async def RedditDMBot(
                 ip = 0
 
         # initializing a browser of nodriver
-        browser = await nodriver.start(
+        browser = await zendriver.start(
             config = browser_config
         )
 
         # creating an instance by navigating to Reddit's login page
         instance = await browser.get(links['REDDIT_LOGIN_PAGE_URL'])
 
+        #sleep(10)
+
         try: # logging in to Reddit
 
             # finding the username input and filling it
-            username_input = await instance.select(locators['username_input_locator'], timeout = 5)
+            username_input = await instance.wait_for(
+                tagname = 'input',
+                attrs = {
+                    "name":"username"
+                },
+                timeout = 15
+            )
             await username_input.send_keys(account['username'])
 
             # finding the password input and filling it
-            password_input = await instance.select(locators['password_input_locator'], timeout = 5)
+            password_input = await instance.locate(
+                tagname = 'input',
+                attrs = {
+                    "name":"password"
+                },
+                timeout = 15
+            )
             await password_input.send_keys(account['password'])
 
             # finding and clicking the log in button
-            login_button = await instance.find('Log In', best_match = True)
+            login_button = await instance.find(tagname = 'button', attrs = {'class':'login', 'type':'button'})
             await login_button.click()
 
-        except TimeoutError: # in case of wrong locators
-
-            print('BBBBOOOOPPPP')
-
-            # finding the username input and filling it
-            username_input = await instance.find('Email or username', best_match = True, timeout = 5)
-            await username_input.send_keys(account['username'])
-
-            # finding the password input and filling it
-            password_input = await instance.find('Password', best_match = True, timeout = 5)
-            await password_input.send_keys(account['password'])
-
-            # finding and clicking the log in button
-            login_button = await instance.find('Log In', best_match = True)
-            await login_button.click()
-
+        except TimeoutError: # in case of wrong locators # rare
+            # import traceback
+            # print(traceback.format_exc())
+            Modules.log(2, f'[RedditDMBot] - An error occured while trying to login to Reddit account {account["username"]}:{account["password"]} @ {ip}. Failed to locate one or more elements on Reddit\'s login page.')
             sleep(500)
+            return
 
         except: # in case of other error
-
+            # import traceback
+            # print(traceback.format_exc())
             Modules.log(2, f'[RedditDMBot] - An error occured while trying to login to Reddit account {account["username"]}:{account["password"]} @ {ip}.')
-        
+            sleep(500)
+            return
+         
         try:
 
-            await instance.find('Logged in as', best_match = True, timeout = 10)
+            await instance.select(locators['logged_in_indicator_locator'], timeout = 10)
             Modules.log(0, f'[RedditDMBot] - Successfully logged in to Reddit account {account["username"]}:{account["password"]} @ {ip}.')
 
         except:
             
             Modules.log(2, f'[RedditDMBot] - Unable to log in into account {account["username"]}:{account["password"]} @ {ip}. Exiting.')
+            sleep(500)
             return
 
         sleep(config['cooldown'])
@@ -342,7 +349,7 @@ async def RedditDMBot(
             if(config['proxy']['proxy_rotation_link'] != ''):
                 Modules.log(-1, '[RedditDMBot] Rotating proxy IP...')
                 get(config['proxy']['proxy_rotation_link'])
-                sleep(config['proxy']['proxy_rotation_link'])
+                sleep(config['proxy']['proxy_rotation_cooldown'])
             else:
                 Modules.log(2, '[RedditDMBot] - A proxy rotation link must be provided to rotate the proxy!')
                 exit()
