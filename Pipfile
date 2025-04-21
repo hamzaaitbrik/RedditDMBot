@@ -5,8 +5,6 @@ name = "pypi"
 
 [packages]
 requests = "*"
-playwright = "*"
-playwright-stealth = "*"
 setuptools = "*"
 
 [dev-packages]
