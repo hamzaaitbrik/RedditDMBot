@@ -2,5 +2,12 @@
     "usernames":"db/usernames.csv",
     "usernames_sent":"db/usernames_sent.csv",
     "usernames_failed":"db/usernames_failed.csv",
-    "toss_accounts":"rdt/toss_accounts.csv"
+    "toss_accounts":"rdt/toss_accounts.csv",
+    "JavaScript":{
+        "getElementByAttributeValue_js":"rsrc/JavaScript/getElementByAttributeValue.js"
+    },
+    "proxy":{
+        "proxy_extension_path":"rsrc/extensions/proxy",
+        "proxy_backend_path":"rsrc/extensions/proxy/static_background.js"
+    }
 }
