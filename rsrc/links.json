@@ -1,5 +1,6 @@
 {
     "REDDIT_LOGIN_PAGE_URL":"https://www.reddit.com/account/login",
-    "MESSAGE_URL":"https://chat.reddit.com/user",
-    "getConnectionIP":"https://httpbin.org/ip"
+    "REDDIT_USER_PAGE_URL":"https://www.reddit.com/user",
+    "REDDIT_MESSAGE_PAGE_URL":"https://chat.reddit.com/user",
+    "GET_CONNECTION_IP":"http://ip-api.com/json/"
 }
