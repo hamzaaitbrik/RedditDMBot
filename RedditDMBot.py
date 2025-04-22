@@ -304,7 +304,7 @@ async def RedditDMBot(
                 'placeholder':'Message'
             }
         )
-        await message_input.send_keys('HELLOOOOOOO')
+        await message_input.send_keys(choice(config['messages'])) # chosing a random message out of the list of messages
 
         sleep(uniform(0.5,1.5))
 
