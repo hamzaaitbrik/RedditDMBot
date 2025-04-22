@@ -3,27 +3,24 @@
 
 Feel free to contribute to this project or suggest more features to add. You can reach me on Discord @**ozymandiasthegreat**.
 # What's new?
-Changed the technology to [Playwright](https://playwright.dev/python/) for maximum efficiency.
+I changed the technology which the software depend on to a private framework I built on top of [Zendriver](https://github.com/stephanlensky/zendriver). The reason I changed the framework is because Playwright and Selenium are easily detected by Reddit, unlike Zendriver that uses CDP to connect to Chrome.<br>
+I also added functionality so that you only need to provide the bot with plain usernames of users you want to DM, unlike the older version which required you to get a datapoint Reddit has on its backend.
 
 # Importnat
-There are two versions of the bot, [Selenium](https://github.com/hamzaaitbrik/RedditDMBot/tree/selenium) and [Playwright](https://github.com/hamzaaitbrik/RedditDMBot). Both versions of the bot are tested 14th of February, 2024; both are working. **Playwright version performs better than Selenium.**<br>
-This bot was developed on a Linux machine, it may need some modifications to work on a Windows machine. Mainly link structure.
-
-# In progress
-Add a UI(User Interface). I haven't started working on this, I think the bot will remain a CLI-only tool for now.
+There are three versions of the bot, [Selenium](https://github.com/hamzaaitbrik/RedditDMBot/tree/selenium), [Playwright](https://github.com/hamzaaitbrik/RedditDMBot), and [Zendriver](https://github.com/hamzaaitbrik/RedditDMBot/tree/zendriver). Zendriver version is tested as of the 22nd of April 2025. **Zendriver version performs better than the rest.**<br>
 
 # Prerequisites
 0 - Have ```Python``` and ```Pip``` installed. This project was developed with Python 3.11.8<br>
-1 - Clone this repository running the command ```git clone https://github.com/hamzaaitbrik/RedditDMBot.git``` or simply [Download it](https://github.com/hamzaaitbrik/RedditDMBot/archive/refs/heads/playwright.zip).<br>
+1 - Clone this repository running the command ```git clone https://github.com/hamzaaitbrik/RedditDMBot.git``` or simply [Download it](https://github.com/hamzaaitbrik/RedditDMBot/archive/refs/heads/zendriver.zip).<br>
 2 - Install ```Pipenv``` using the command ```pip install pipenv```.<br>
 3 - Run ```pipenv install``` inside the project to install its dependencies.<br>
-4 - Run ```playwright install Chromium``` or ```python -m playwright install Chromium``` to install Playwright dependencies(browser).<br>
 
 # How to use
 1 - Add accounts to ```rdt/account.json```. Refer to [rdt/README](https://github.com/hamzaaitbrik/RedditDMBot/blob/playwright/rdt/README.md) to see how to properly add accounts.<br>
 2 - Change what needs to be changed in ```rsrc/config.json```. Refer to [rsrc/README](https://github.com/hamzaaitbrik/RedditDMBot/blob/playwright/rsrc/README.md) to see how to change values to meet your needs.<br>
-3 - Fill ```db/usernames.csv``` with all the usernames you want to DM.<br>
-4 - Run ```RedditDMBot.py```.
+3 - Add proxies to ```rsrc/proxies.json``` to use the bot with proxies.<br>
+4 - Fill ```db/usernames.csv``` with all the **usernames** you want to DM.<br>
+5 - Run ```RedditDMBot.py```.
 
 # How does it work?
 RedditDMBot is a bot made for the purpouse of automating the process of sending messages to Reddit users<br>
