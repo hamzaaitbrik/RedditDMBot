@@ -222,7 +222,7 @@ async def RedditDMBot(
         try: # logging in to Reddit
 
             # finding the username input and filling it
-            username_input = await instance.wait_for(
+            username_input = await instance.find(
                 tagname = 'input',
                 attrs = {
                     "name":"username"
@@ -232,7 +232,7 @@ async def RedditDMBot(
             await username_input.send_keys(account['username'])
 
             # finding the password input and filling it
-            password_input = await instance.locate(
+            password_input = await instance.find(
                 tagname = 'input',
                 attrs = {
                     "name":"password"
@@ -241,32 +241,40 @@ async def RedditDMBot(
             )
             await password_input.send_keys(account['password'])
 
+            sleep(uniform(0.5,1))
+
             # finding and clicking the log in button
-            login_button = await instance.find(tagname = 'button', attrs = {'class':'login', 'type':'button'})
+            login_button = await instance.find(
+                tagname = 'button',
+                attrs = {
+                    'class':'login',
+                    'type':'button'
+                }
+            )
             await login_button.click()
 
         except TimeoutError: # in case of wrong locators # rare
-            # import traceback
-            # print(traceback.format_exc())
-            Modules.log(2, f'[RedditDMBot] - An error occured while trying to login to Reddit account {account["username"]}:{account["password"]} @ {ip}. Failed to locate one or more elements on Reddit\'s login page.')
+            import traceback
+            print(traceback.format_exc())
+            Modules.log(2, f'[RedditDMBot] - An error occured while trying to login to Reddit account {account["username"]}:{account["password"]} via {ip}. Failed to locate one or more elements on Reddit\'s login page.')
             sleep(500)
             return
 
         except: # in case of other error
-            # import traceback
-            # print(traceback.format_exc())
-            Modules.log(2, f'[RedditDMBot] - An error occured while trying to login to Reddit account {account["username"]}:{account["password"]} @ {ip}.')
+            import traceback
+            print(traceback.format_exc())
+            Modules.log(2, f'[RedditDMBot] - An error occured while trying to login to Reddit account {account["username"]}:{account["password"]} via {ip}.')
             sleep(500)
             return
          
         try:
 
             await instance.select(locators['logged_in_indicator_locator'], timeout = 10)
-            Modules.log(0, f'[RedditDMBot] - Successfully logged in to Reddit account {account["username"]}:{account["password"]} @ {ip}.')
+            Modules.log(0, f'[RedditDMBot] - Successfully logged in to Reddit account {account["username"]}:{account["password"]} via {ip}.')
 
         except:
             
-            Modules.log(2, f'[RedditDMBot] - Unable to log in into account {account["username"]}:{account["password"]} @ {ip}. Exiting.')
+            Modules.log(2, f'[RedditDMBot] - Unable to log in into account {account["username"]}:{account["password"]} via {ip}. Exiting.')
             sleep(500)
             return
 
@@ -276,7 +284,9 @@ async def RedditDMBot(
 
         # getting the id of our target first
         await instance.get(f'{links["REDDIT_USER_PAGE_URL"]}/{target}')
-        reddit_user_data_element = await instance.find(locators['reddit_user_data_locator'])
+        reddit_user_data_element = await instance.find(
+            tagname = locators['reddit_user_data_locator']
+        )
         target_id = loads(reddit_user_data_element.attributes[1])['profile']['id']
 
         sleep(config['cooldown'])
@@ -287,13 +297,26 @@ async def RedditDMBot(
         sleep(config['cooldown'])
         
         # writing the message
-        message_input = await instance.find('Message', best_match = True)
+        message_input = await instance.find(
+            tagname = 'textarea',
+            attrs = {
+                'name':'message',
+                'placeholder':'Message'
+            }
+        )
         await message_input.send_keys('HELLOOOOOOO')
 
-        send_message_button = await instance.find('Send message', best_match = True)
-        await send_message_button.click()
+        sleep(uniform(0.5,1.5))
 
-        sleep(100)
+        page_buttons = await instance.find_all(tagname = 'button')
+        for button in page_buttons:
+            try:
+                if button.attrs['aria-label'] == 'Send message':
+                    send_message_button = button
+            except:
+                pass
+        
+        await send_message_button.click()
 
         try: # in case the message was not sent
 
@@ -301,7 +324,7 @@ async def RedditDMBot(
             await instance.select(locators['unable_to_DM_locator'], timeout = 3)
             #await instance.find('Wow, you\'ve sent', best_match = True, timeout = 3)
 
-            Modules.log(2, f'[RedditDMBot] - {account["username"]}:{account["password"]} @ {ip} was unable to send DM. Writing it to the database...')
+            Modules.log(2, f'[RedditDMBot] - {account["username"]}:{account["password"]} via {ip} was unable to send DM. Writing it to the database...')
             
             # adding the username of the account that was not able to send a DM to a list of accounts to toss
             toss_accounts.append(account['username'])
@@ -318,7 +341,7 @@ async def RedditDMBot(
 
         except: # in case the DM was sent successfully
 
-            Modules.log(0, f'[RedditDMBot] - Message sent successfully to {target} using Reddit account {account["username"]}:{account["password"]} @ {ip}. Writing it to the database...')
+            Modules.log(0, f'[RedditDMBot] - Message sent successfully to {target} using Reddit account {account["username"]}:{account["password"]} via {ip}. Writing it to the database...')
 
             # appending the account we used to 
             used_accounts.append(account)
@@ -336,12 +359,12 @@ async def RedditDMBot(
                 ]
             )
 
-        sleep(500)
         sleep(config['cooldown'])
 
     except:
-        
-        await Modules.log(2, f'[RedditDMBot] - An error occured while trying to DM {target} with Reddit account {account["username"]}:{account["password"]} @ {ip}.')
+        import traceback
+        print(traceback.print_exc())
+        await Modules.log(2, f'[RedditDMBot] - An error occured while trying to DM {target} with Reddit account {account["username"]}:{account["password"]} via {ip}.')
 
     finally: # finally rotating proxy IP if a rotation link exists
 
