@@ -3,6 +3,7 @@
     "usernames_sent":"db/usernames_sent.csv",
     "usernames_failed":"db/usernames_failed.csv",
     "toss_accounts":"rdt/toss_accounts.csv",
+    "sent_log":"db/sent_log.txt",
     "JavaScript":{
         "getElementByAttributeValue_js":"rsrc/JavaScript/getElementByAttributeValue.js"
     },

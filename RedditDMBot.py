@@ -1,148 +1,9 @@
 from modules import *
-
-
-
+from module_utils import Modules
+from harvester import poll_subreddit_new
+from message_composer import compose_dm_message_openai_lib
 # Initializing components
 list_usernames, usernames_sent = list(), list()
-#
-
-class Modules:
-    """
-        Modules class, this class holds all the non-main functions the program needs for better functionality.
-    """
-
-    Format = {
-        'GREEN':'\033[92m',
-        'YELLOW':'\033[93m',
-        'RED':'\033[91m',
-        'END':'\033[0m'
-    }
-
-    @staticmethod
-    def log(index: int, data: str) -> None:
-        """
-            Logging system. Not necessary, but good and useful.
-        """
-        
-        # managing different inputs to output them in different colors
-        if(index == -1): # neutral input, no color
-            print(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - {data}')
-        elif(index == 0): # success input, green
-            print(f'{Modules.Format["GREEN"]}[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - {data}{Modules.Format["END"]}')
-        elif(index == 1): # error input, yellow
-            print(f'{Modules.Format["YELLOW"]}[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - {data}{Modules.Format["END"]}')
-        elif(index == 2): # fatal error input, red
-            print(f'{Modules.Format["RED"]}[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - {data}{Modules.Format["END"]}')
-
-        with open('logs/log', 'a') as log:
-            log.write(f'[{str(datetime.now().strftime(r"%Y-%m-%d %H:%M:%S"))}] - {data}\n')
-
-    @staticmethod
-    def dbToList(database: str, list_usernames: list) -> None: # to get all usernames from usernames.csv into list_usernames
-        """
-            retrieving data from a CSV database
-        """
-        with open(database, 'r') as usernames:
-            dbReader = reader(usernames, delimiter=',')
-            for row in dbReader:
-                list_usernames.append(
-                    str(row[0])
-                )
-
-    @staticmethod
-    def writeToCSV(database: str, data: list) -> None:
-        """
-            saving data to a CSV database
-        """
-        with open(database, 'a', newline='', encoding='utf-8') as db:
-            _writer = writer(db)
-            _writer.writerow(
-                data
-            )
-    
-    @staticmethod
-    def manageProxyExtension(index: int, proxy_backend_path: str, proxy: str) -> None:
-        """
-            this function is responsible for adding and removing proxy from rsrc/extensions/proxy
-            this is a really important function that would enable the software to rotate between proxies
-        """
-        try:
-
-            if(index == 0): # removing proxy
-
-                proxyList, proxy_backend = proxy.split(':'), str()
-                host, port, username, password = proxyList[0], proxyList[1], proxyList[2], proxyList[3]
-                with open(proxy_backend_path, 'r') as proxy_backend_js:
-                    proxy_backend = proxy_backend_js.read()
-                proxy_backend = proxy_backend.replace(host, '_host').replace(port, '_port').replace(username, '_username').replace(password, '_password')
-                with open(proxy_backend_path, 'w') as proxy_backend_js:
-                    proxy_backend_js.write(proxy_backend)
-                Modules.log(0, f'[RedditDMBot] - Proxy {proxy} was removed successfully.')
-
-            elif(index == 1): # adding proxy
-
-                proxyList, proxy_backend = proxy.split(':'), str()
-                host, port, username, password = proxyList[0], proxyList[1], proxyList[2], proxyList[3]
-                with open(proxy_backend_path, 'r') as proxy_backend_js:
-                    proxy_backend = proxy_backend_js.read()
-                proxy_backend = proxy_backend.replace('_host', host).replace('_port', port).replace('_username', username).replace('_password', password)
-                with open(proxy_backend_path, 'w') as proxy_backend_js:
-                    proxy_backend_js.write(proxy_backend)
-                Modules.log(0, f'[RedditDMBot] - Proxy {proxy} was removed successfully.')
-
-        except:
-
-            #import traceback
-            # logging out the error
-            #Modules.log(2, traceback.format_exc())
-            Modules.log(2, '[RedditDMBot] - Fatal error while trying to setup Proxy extension.')
-
-
-    # getting necessary data: configuration, Reddit account(s), locators of Reddit pages, necessary links, and more for the program to function
-
-    @staticmethod
-    def getAccounts() -> list:
-        with open('rdt/accounts.json','r') as accounts:
-            return load(accounts)
-
-    @staticmethod
-    def getProxies() -> list:
-        with open('rsrc/proxies.json','r') as proxies:
-            return load(proxies)
-
-    @staticmethod
-    def getPaths() -> dict: # managing relative paths in case this program needs to run on multiple computers with different paths to resources
-        with open('rsrc/paths.json','r') as config:
-            return load(config)
-
-    @staticmethod
-    def getConfig() -> dict:
-        with open('rsrc/config.json','r') as config:
-            return load(config)
-
-    @staticmethod
-    def getLocators() -> dict:
-        with open('rsrc/locators.json','r') as locators:
-            return load(locators)
-
-    @staticmethod
-    def getLinks() -> dict:
-        with open('rsrc/links.json','r') as links:
-            return load(links)
-
-    # getting JavaScript code to execute inside CD
-    @staticmethod
-    def getJS(path) -> str:
-        with open(path, 'r') as JS:
-            return str(JS.read())
-
-    # getting a list of the most common user agents to use
-    @staticmethod
-    def getUserAgents() -> list:
-        with open('rsrc/user_agents.json','r') as user_agents:
-            return load(user_agents)
-
-
 
 
 async def RedditDMBot(
@@ -156,11 +17,14 @@ async def RedditDMBot(
         toss_accounts: list,
         account: dict,
         target: str,
-        usernames_sent: list
+        usernames_sent: list,
+        personalized_message: str,
+        post_url: str
 ) -> None:
     """
         main function responsible for sending a DM
     """
+    browser, instance = None, None # Initialize here
     try:
         # initializing a config instance for the browser
         browser_config = zendriver.Config(
@@ -169,6 +33,11 @@ async def RedditDMBot(
 
         # headless or headfull?
         browser_config.headless = config['headless']
+
+        # Add --no-sandbox argument
+        if '--no-sandbox' not in browser_config.browser_args:
+            browser_config.browser_args.append('--no-sandbox')
+
 
         # adding arguments to the configuration to initiate the browser with
         #browser_config.browser_args = config['browser_args']
@@ -217,7 +86,7 @@ async def RedditDMBot(
         # creating an instance by navigating to Reddit's login page
         instance = await browser.get(links['REDDIT_LOGIN_PAGE_URL'])
 
-        #sleep(10)
+        sleep(10)
 
         try: # logging in to Reddit
 
@@ -304,7 +173,7 @@ async def RedditDMBot(
                 'placeholder':'Message'
             }
         )
-        await message_input.send_keys(choice(config['messages'])) # chosing a random message out of the list of messages
+        await message_input.send_keys(personalized_message) # chosing a random message out of the list of messages
 
         sleep(uniform(0.5,1.5))
 
@@ -358,13 +227,20 @@ async def RedditDMBot(
                     account['username']
                 ]
             )
-
+            Modules.writeToCSV(
+                paths['sent_log'],
+                [
+                    username,
+                    post_url,
+                    datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                ]
+            )
         sleep(config['cooldown'])
 
     except:
         import traceback
         print(traceback.print_exc())
-        await Modules.log(2, f'[RedditDMBot] - An error occured while trying to DM {target} with Reddit account {account["username"]}:{account["password"]} via {ip}.')
+        Modules.log(2, f'[RedditDMBot] - An error occured while trying to DM {target} with Reddit account {account["username"]}:{account["password"]} via {ip}.')
 
     finally: # finally rotating proxy IP if a rotation link exists
 
@@ -378,14 +254,14 @@ async def RedditDMBot(
                 exit()
 
         # closing the instance and the browser
-        await instance.close()
-        #await browser.stop()
+        # Check if instance exists before closing
+        if instance:
+            await instance.close()
+        # Check if browser exists before stopping (if uncommented later)
+        # if browser:
+        #     await browser.stop()
 
         sleep(config['cooldown'])
-
-
-
-
 
 
 
@@ -395,48 +271,96 @@ if __name__ == '__main__': # software entry point
     config, paths, links, locators = Modules.getConfig(), Modules.getPaths(), Modules.getLinks(), Modules.getLocators()
     proxies_pool = Modules.getProxies()
 
+    # harvest posts from subreddits to add to database 
+    # subreddit_posts = poll_subreddit_new(config['target_subreddits'][0])
+
     Modules.dbToList(paths['usernames'], list_usernames)
+    Modules.dbToList(paths['usernames_sent'], usernames_sent)
 
     accounts, used_accounts, toss_accounts = Modules.getAccounts(), list(), list()
 
-    while(len(list_usernames) != 0): # while there are usernames to send DM to
+    # LOOP STARTS HERE
+    while(True):
+        # harvest posts from subreddits and add to database
+        posts_per_hour = 3
+        len_subreddits = len(config['target_subreddits'])
+        Modules.log(0, f"Harvesting {posts_per_hour} total posts per hour from {len_subreddits} subreddits...")
 
-        username = choice(list_usernames) # getting a random username from the list of usernames to DM
+        all_posts = []
+        for subreddit in config['target_subreddits']:
+            subreddit_posts = poll_subreddit_new(subreddit, posts_per_hour // len_subreddits)
+            for post in subreddit_posts:
+                all_posts.append(post)
 
-        # choosing an account to send the DM with
-        if(len(accounts) == 0): # to check if all accounts are used
-            accounts, used_accounts = used_accounts, list() # repopulates accounts with used_accounts and reinitialize used_accounts to an empty list
-        try:
-            account = accounts.pop(0) # getting the first account of the list accounts, then removing it
-        except IndexError: # in case no more accounts are in the accounts list
-            Modules.log(1, '[RedditDMBot] There are no more useful accounts to use.')
-            break
+        dm_tasks = []
+        # for post in all_posts:
+        #     dm_tasks.append({
+        #         "username": post['author'],
+        #         "message": compose_dm_message_openai_lib(post_data=post),
+        #         "post_url": post['url']
+        #     })
 
-        # choosing a proxy to use
-        if(config['proxy']['proxy_type'] == 'localhost'): proxy = 'localhost'
-        elif(config['proxy']['proxy_type'] == 'sticky'):
+        # for testing
+        dm_tasks = [
+            {
+                "username": "XpsProGamer",
+                "message": "test message",
+                "post_url": "https://www.reddit.com/r/testsubreddit/comments/1234567890/testpost/"
+            }
+        ]
+
+        Modules.log(0, f"Harvested {len(dm_tasks)} DM tasks from {len(all_posts)} posts.")
+
+        message_count = 0
+
+        while(len(dm_tasks) != 0): # while there are DM tasks to send
+            task = dm_tasks.pop(0) # getting a random DM task from the list of DM tasks
+            username = task['username']
+            message = task['message']
+            post_url = task['post_url']
+            if username in usernames_sent:
+                Modules.log(1, f'{username} has already been sent a DM, removing from list...')
+                continue
+
+            # choosing an account to send the DM with
+            if(len(accounts) == 0): # to check if all accounts are used
+                accounts, used_accounts = used_accounts, list() # repopulates accounts with used_accounts and reinitialize used_accounts to an empty list
             try:
-                proxy = proxies_pool['sticky'].pop(0)
-            except IndexError:
-                Modules.log(1, '[RedditDMBot] There are no more useful proxies to use.')
+                account = accounts.pop(0) # getting the first account of the list accounts, then removing it
+            except IndexError: # in case no more accounts are in the accounts list
+                Modules.log(1, '[RedditDMBot] There are no more useful accounts to use.')
                 break
-        elif(config['proxy']['proxy_type'] == 'rotative'):
-            proxy = proxies_pool['rotative'][0]
 
-        asyncio.run(
-            RedditDMBot(
-                config = config,
-                links = links,
-                paths = paths,
-                locators = locators,
-                proxy = proxy,
-                list_usernames = list_usernames,
-                used_accounts = used_accounts,
-                toss_accounts = toss_accounts,
-                account = account,
-                target = username,
-                usernames_sent = usernames_sent
-            )
-        ) # entry point
+            # choosing a proxy to use
+            if(config['proxy']['proxy_type'] == 'localhost'): proxy = 'localhost'
+            elif(config['proxy']['proxy_type'] == 'sticky'):
+                try:
+                    proxy = proxies_pool['sticky'].pop(0)
+                except IndexError:
+                    Modules.log(1, '[RedditDMBot] There are no more useful proxies to use.')
+                    break
+            elif(config['proxy']['proxy_type'] == 'rotative'):
+                proxy = proxies_pool['rotative'][0]
+
+            asyncio.run(
+                RedditDMBot(
+                    config = config,
+                    links = links,
+                    paths = paths,
+                    locators = locators,
+                    proxy = proxy,
+                    list_usernames = list_usernames,
+                    used_accounts = used_accounts,
+                    toss_accounts = toss_accounts,
+                    account = account,
+                    target = username,
+                    personalized_message = message,
+                    post_url = post_url,
+                    usernames_sent = usernames_sent
+                )
+            ) # entry point
+            message_count += 1
+        Modules.log(0, f'Loop complete. Total DMs sent: {message_count}. Sleeping for {config["cooldown"]} seconds...')
+        sleep(config['cooldown'])
 
     Modules.log(-1, '[RedditDMBot] - Done.')

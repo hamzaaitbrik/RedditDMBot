@@ -4,7 +4,7 @@
         "proxy_rotation_link":"",
         "proxy_rotation_cooldown":20
     },
-    "cooldown":3.5,
+    "cooldown":5,
     "headless":false,
     "browser_args":[
         "--start-maximized",
@@ -14,7 +14,8 @@
         "--disable-features=OptimizationGuideModelDownloading,OptimizationHintsFetching,OptimizationTargetPrediction,OptimizationHints"
     ],
     "messages":[
-        "",
-        ""
-    ]
+        "hi",
+        "hi there"
+    ],
+    "target_subreddits": ["startups"]
 }

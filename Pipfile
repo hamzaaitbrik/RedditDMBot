@@ -6,7 +6,11 @@ name = "pypi"
 [packages]
 requests = "*"
 setuptools = "*"
-
+Deprecated = "*"
+asyncio_atexit = "*"
+websockets = "*"
+streamlit = "*"
+openai = "*"
 [dev-packages]
 
 [requires]
