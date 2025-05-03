@@ -3,69 +3,89 @@ import json
 import os
 
 CONFIG_PATH = os.path.join('rsrc', 'config.json')
+PATHS_PATH = os.path.join('rsrc', 'paths.json') # Define path for paths.json
 
-def load_config():
-    """Loads the configuration from config.json"""
+def load_json(filepath):
+    """Loads configuration from a JSON file."""
     try:
-        with open(CONFIG_PATH, 'r') as f:
+        with open(filepath, 'r') as f:
             return json.load(f)
     except FileNotFoundError:
-        st.error(f"Error: Configuration file not found at {CONFIG_PATH}")
+        st.error(f"Error: Configuration file not found at {filepath}")
         return None
     except json.JSONDecodeError:
-        st.error(f"Error: Could not decode JSON from {CONFIG_PATH}")
+        st.error(f"Error: Could not decode JSON from {filepath}")
         return None
 
-def save_config(config_data):
-    """Saves the configuration to config.json"""
+def save_json(filepath, data):
+    """Saves configuration to a JSON file."""
     try:
-        with open(CONFIG_PATH, 'w') as f:
-            json.dump(config_data, f, indent=4)
-        st.success("Configuration saved successfully!")
+        with open(filepath, 'w') as f:
+            json.dump(data, f, indent=4)
+        st.success(f"Configuration saved successfully to {filepath}!")
+        return True
     except IOError as e:
-        st.error(f"Error saving configuration: {e}")
+        st.error(f"Error saving configuration to {filepath}: {e}")
+        return False
+    except Exception as e:
+        st.error(f"An unexpected error occurred while saving {filepath}: {e}")
+        return False
 
 
 st.set_page_config(layout="wide")
 st.title("Reddit DM Bot Configuration")
 
-config = load_config()
+# Load both config.json and paths.json
+config = load_json(CONFIG_PATH)
+paths_config = load_json(PATHS_PATH)
 
-if config:
+# Initialize if loading failed
+if config is None:
+    config = {}
+if paths_config is None:
+    paths_config = {}
+
+
+col1, col2 = st.columns(2)
+
+with col1:
     st.header("General Settings")
-    config['headless'] = st.checkbox("Run Headless", value=config.get('headless', True))
-    config['cooldown'] = st.number_input("Cooldown (seconds)", value=float(config.get('cooldown', 5)), min_value=0.1, step=0.5, format="%.1f")
+    config['cooldown'] = st.number_input("Base Cooldown (seconds)", value=float(config.get('cooldown', 5)), min_value=0.1, step=0.5, format="%.1f", help="General delay used in various parts of the bot.")
+    config['target_subreddits'] = st.text_area("Target Subreddits (one per line)", value="\n".join(config.get('target_subreddits', [])), height=100)
+    config['target_subreddits'] = [sub.strip() for sub in config['target_subreddits'].split('\n') if sub.strip()]
+    st.header("OpenAI Message Composer Settings")
+    st.caption("The bot builds the prompt using the rules, template, brand blurb, and post details, replacing {username}. It uses the model specified below.")
+    config['openaiApiKey'] = st.text_input("OpenAI API Key", value=config.get('openaiApiKey', ''), type="password", help="Your secret OpenAI API key (sk-...)")
+    config['openaiModel'] = st.text_input("OpenAI Model", value=config.get('openaiModel', 'gpt-4o-mini'), help="e.g., gpt-4o-mini, gpt-4o, gpt-3.5-turbo")
+    config['messageTemplate'] = st.text_area("Message Template", value=config.get('messageTemplate', "Hi {username}, saw your post about [briefly mention topic - AI should fill this]. Thought you might find this interesting: {brandBlurb}. Check it out: {appLink}"), height=150, help="Template for the AI to fill. Must include '[briefly mention topic - AI should fill this]'. Can use {username}, {brandBlurb}, {appLink}.")
+    config['personaRules'] = st.text_area("Persona Rules for AI", value=config.get('personaRules', '- Be concise and direct.\n- Sound genuinely helpful, not overly salesy.\n- Avoid emojis.'), height=100)
+    config['brandBlurb'] = st.text_input("Brand Blurb", value=config.get('brandBlurb', 'our cool new app'))
+    config['appLink'] = st.text_input("App Link", value=config.get('appLink', 'https://example.com/app'))
+with col2:
+    st.header("Advanced Settings & Pacing")
+    st.caption("Pacing: Approx. 1 DM every MIN_DM_GAP_SEC +/- JITTER_SEC seconds.")
+    config['HARVEST_INTERVAL_SEC'] = st.number_input("Harvest Interval (sec)", value=config.get('HARVEST_INTERVAL_SEC', 30), min_value=5, help="How often the harvester checks for new posts (if run continuously). Currently harvester runs once.")
+    config['MIN_DM_GAP_SEC'] = st.number_input("Min DM Gap (sec)", value=config.get('MIN_DM_GAP_SEC', 60), min_value=10, help="Minimum time between sending DMs.")
+    config['JITTER_SEC'] = st.number_input("DM Jitter (sec)", value=config.get('JITTER_SEC', 15), min_value=0, max_value=config.get('MIN_DM_GAP_SEC', 60) // 2, help="Random seconds added/subtracted to MIN_DM_GAP_SEC.")
+    config['MAX_DM_PER_HOUR'] = st.number_input("Max DMs per Hour (approx)", value=config.get('MAX_DM_PER_HOUR', 40), min_value=1, help="An approximate safety limit.")
 
-    st.header("Browser Arguments")
-    # Display list as a newline-separated string
-    browser_args_str = "\n".join(config.get('browser_args', []))
-    new_browser_args_str = st.text_area("Browser Arguments (one per line)", value=browser_args_str, height=150)
-    # Convert back to list, stripping empty lines
-    config['browser_args'] = [arg.strip() for arg in new_browser_args_str.split('\n') if arg.strip()]
+    st.header("File Paths")
+    paths_config['sent_log_file'] = st.text_input("Sent Log File Path", value=paths_config.get('sent_log_file', 'logs/sent_log.csv'), help="Path relative to project root where sent DMs are logged.")
+    paths_config['usernames_sent'] = paths_config.get('usernames_sent') # Ensure consistency if old code uses this key
 
-    st.header("Messages")
-    # Display list as a newline-separated string
-    messages_str = "\n".join(config.get('messages', []))
-    new_messages_str = st.text_area("Messages (one per line, chosen randomly)", value=messages_str, height=200)
-    # Convert back to list, stripping empty lines
-    config['messages'] = [msg.strip() for msg in new_messages_str.split('\n') if msg.strip()]
+st.divider()
 
-    st.header("Proxy Settings")
-    proxy_config = config.get('proxy', {})
-    proxy_config['proxy_type'] = st.selectbox(
-        "Proxy Type",
-        options=['localhost', 'sticky', 'rotative'],
-        index=['localhost', 'sticky', 'rotative'].index(proxy_config.get('proxy_type', 'localhost'))
-    )
-    proxy_config['proxy_rotation_link'] = st.text_input("Proxy Rotation Link (for 'rotative')", value=proxy_config.get('proxy_rotation_link', ''))
-    proxy_config['proxy_rotation_cooldown'] = st.number_input("Proxy Rotation Cooldown (seconds)", value=proxy_config.get('proxy_rotation_cooldown', 10), min_value=0)
+if st.button("Save All Configurations", use_container_width=True):
+    # Check if config objects were loaded successfully
+    config_valid = config is not None
+    paths_valid = paths_config is not None
 
-    config['proxy'] = proxy_config # Update the main config dict
+    if config_valid:
+        save_json(CONFIG_PATH, config)
+    else:
+        st.error("Main configuration (config.json) was not loaded, cannot save.")
 
-    st.divider()
-
-    if st.button("Save Configuration", use_container_width=True):
-        save_config(config)
-
-else:
-    st.warning("Could not load configuration.") 
+    if paths_valid:
+        save_json(PATHS_PATH, paths_config)
+    else:
+        st.error("Paths configuration (paths.json) was not loaded, cannot save.") 

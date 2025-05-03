@@ -2,6 +2,10 @@ from modules import *
 from module_utils import Modules
 from harvester import poll_subreddit_new
 from message_composer import compose_dm_message_openai_lib
+import time # Add time import
+import random # Add random import
+from collections import deque # Use deque for efficient timestamp tracking
+
 # Initializing components
 list_usernames, usernames_sent = list(), list()
 
@@ -216,21 +220,21 @@ async def RedditDMBot(
             used_accounts.append(account)
 
             # removing the user we DMed from the list of usernames
-            list_usernames.remove(username)
-            usernames_sent.append(username)
+            list_usernames.remove(target)
+            usernames_sent.append(target)
 
             # adding the user we DMed alongside the account we used to DM to db/usernames_sent.csv
             Modules.writeToCSV(
                 paths['usernames_sent'],
                 [
-                    username,
+                    target,
                     account['username']
                 ]
             )
             Modules.writeToCSV(
-                paths['sent_log'],
+                paths['sent_log_file'],
                 [
-                    username,
+                    target,
                     post_url,
                     datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 ]
@@ -271,96 +275,214 @@ if __name__ == '__main__': # software entry point
     config, paths, links, locators = Modules.getConfig(), Modules.getPaths(), Modules.getLinks(), Modules.getLocators()
     proxies_pool = Modules.getProxies()
 
-    # harvest posts from subreddits to add to database 
-    # subreddit_posts = poll_subreddit_new(config['target_subreddits'][0])
+    # --- Get Pacing Configuration ---
+    # Use .get() with defaults in case keys are missing
+    harvest_interval_sec = config.get('HARVEST_INTERVAL_SEC', 30)
+    min_dm_gap_sec = config.get('MIN_DM_GAP_SEC', 60)
+    jitter_sec = config.get('JITTER_SEC', 15)
+    max_dm_per_hour = config.get('MAX_DM_PER_HOUR', 40)
 
-    Modules.dbToList(paths['usernames'], list_usernames)
-    Modules.dbToList(paths['usernames_sent'], usernames_sent)
+    # Validate jitter to prevent negative sleep times
+    if jitter_sec > min_dm_gap_sec:
+        Modules.log(1, f"Warning: JITTER_SEC ({jitter_sec}) is greater than MIN_DM_GAP_SEC ({min_dm_gap_sec}). Clamping jitter.")
+        jitter_sec = min_dm_gap_sec // 2 # Example clamping
 
-    accounts, used_accounts, toss_accounts = Modules.getAccounts(), list(), list()
+    Modules.log(0, f"Pacing Config: HarvestInterval={harvest_interval_sec}s, MinGap={min_dm_gap_sec}s, Jitter={jitter_sec}s, MaxDM/hr={max_dm_per_hour}")
+    # --- End Pacing Configuration ---
+
+
+    # --- Load Initial Data (outside the main loop) ---
+    Modules.dbToList(paths['usernames'], list_usernames) # Assuming this might still be needed for some legacy check? Or remove if unused.
+    # Load the sent log using the correct Modules function
+    sent_log_filepath = paths.get('sent_log_file', 'logs/sent_log.csv') # Default path if not in paths.json
+    sent_log_data = Modules.load_sent_log(sent_log_filepath) # Returns a set of (username, post_url) tuples
+
+    accounts_all = Modules.getAccounts()
+    if not accounts_all:
+        Modules.log(2, "CRITICAL: No accounts found. Exiting.")
+        exit()
+    accounts = list(accounts_all) # Create a mutable copy for the loop
+    used_accounts, toss_accounts = list(), list()
+
+    # Timestamp tracking for hourly limit (using deque for efficiency)
+    dm_timestamps = deque()
+    # --- End Initial Data Loading ---
 
     # LOOP STARTS HERE
     while(True):
-        # harvest posts from subreddits and add to database
-        posts_per_hour = 3
-        len_subreddits = len(config['target_subreddits'])
-        Modules.log(0, f"Harvesting {posts_per_hour} total posts per hour from {len_subreddits} subreddits...")
+        Modules.log(0, "--- Starting Harvest Cycle ---")
+        Modules.log(0, f"Harvesting new posts from subreddits: {config.get('target_subreddits', [])}...")
 
         all_posts = []
-        for subreddit in config['target_subreddits']:
-            subreddit_posts = poll_subreddit_new(subreddit, posts_per_hour // len_subreddits)
-            for post in subreddit_posts:
-                all_posts.append(post)
+        for subreddit in config.get('target_subreddits', []):
+             # Fetch a reasonable number, filtering happens later
+            subreddit_posts = poll_subreddit_new(subreddit, limit= 20) # Fetch more, filter later
+            if subreddit_posts:
+                all_posts.extend(subreddit_posts)
+            time.sleep(random.uniform(1, 3)) # Small delay between subreddit polls
+
+        if not all_posts:
+            Modules.log(1, "No posts found in this harvest cycle.")
+            # Go to sleep before next harvest attempt
+            Modules.log(0, f"Sleeping for {harvest_interval_sec} seconds before next harvest cycle...")
+            time.sleep(harvest_interval_sec)
+            continue # Skip to the next iteration of the main `while True` loop
+
 
         dm_tasks = []
-        # for post in all_posts:
-        #     dm_tasks.append({
-        #         "username": post['author'],
-        #         "message": compose_dm_message_openai_lib(post_data=post),
-        #         "post_url": post['url']
-        #     })
-
-        # for testing
-        dm_tasks = [
-            {
-                "username": "XpsProGamer",
-                "message": "test message",
-                "post_url": "https://www.reddit.com/r/testsubreddit/comments/1234567890/testpost/"
+        Modules.log(0, "Composing messages for harvested posts...")
+        composition_attempts = 0
+        for post in all_posts:
+            composition_attempts += 1
+            Modules.log(-1, f"Attempting composition {composition_attempts}/{len(all_posts)} for post by u/{post.get('author','N/A')}")
+            # Pass the necessary config parts to the composer
+            # Ensure your config.json has these keys or they are handled by defaults
+            openai_config_for_composer = {
+                "openaiApiKey": config.get("openaiApiKey"),
+                "openaiModel": config.get("openaiModel", "gpt-4o-mini"),
+                "messageTemplate": config.get("messageTemplate"),
+                "personaRules": config.get("personaRules"),
+                "brandBlurb": config.get("brandBlurb"),
+                "appLink": config.get("appLink")
             }
-        ]
+            # Filter out None values if message_composer handles defaults safely
+            openai_config_for_composer = {k: v for k, v in openai_config_for_composer.items() if v is not None}
 
-        Modules.log(0, f"Harvested {len(dm_tasks)} DM tasks from {len(all_posts)} posts.")
+            message = compose_dm_message_openai_lib(post_data=post, user_config=openai_config_for_composer)
 
-        message_count = 0
+            if message:
+                dm_tasks.append({
+                    "username": post['author'],
+                    "message": message,
+                    "post_url": post['url']
+                })
+                Modules.log(0, f"Successfully composed message for u/{post['author']}")
+            else:
+                 Modules.log(1, f"Failed to compose message for u/{post['author']}")
+            time.sleep(random.uniform(0.5, 1.5)) # Small delay between OpenAI calls
 
-        while(len(dm_tasks) != 0): # while there are DM tasks to send
-            task = dm_tasks.pop(0) # getting a random DM task from the list of DM tasks
+
+        Modules.log(0, f"Generated {len(dm_tasks)} DM tasks from {len(all_posts)} harvested posts.")
+
+        # --- DM Sending Loop ---
+        message_count_this_cycle = 0
+        tasks_processed_this_cycle = 0
+        start_time = time.time()
+
+        while dm_tasks and message_count_this_cycle < max_dm_per_hour and time.time() - start_time < 3600: # Process all generated tasks for this cycle
+            tasks_processed_this_cycle += 1
+            task = dm_tasks.pop(0) # FIFO processing
             username = task['username']
             message = task['message']
             post_url = task['post_url']
-            if username in usernames_sent:
-                Modules.log(1, f'{username} has already been sent a DM, removing from list...')
+
+            # --- Filtering based on Sent Log ---
+            if (username, post_url) in sent_log_data:
+                Modules.log(1, f'User {username} already sent DM regarding post {post_url}. Skipping.')
                 continue
+            # --- End Filtering ---
 
-            # choosing an account to send the DM with
-            if(len(accounts) == 0): # to check if all accounts are used
-                accounts, used_accounts = used_accounts, list() # repopulates accounts with used_accounts and reinitialize used_accounts to an empty list
+            # --- Hourly Rate Limit Check ---
+            current_time = time.time()
+            # Remove timestamps older than an hour (3600 seconds)
+            while dm_timestamps and dm_timestamps[0] < current_time - 3600:
+                dm_timestamps.popleft()
+            # Check if limit is reached
+            if len(dm_timestamps) >= max_dm_per_hour:
+                time_to_wait = (dm_timestamps[0] + 3600) - current_time
+                if time_to_wait > 0:
+                    Modules.log(1, f"Hourly DM limit ({max_dm_per_hour}/hr) reached. Sleeping for {time_to_wait:.1f} seconds...")
+                    time.sleep(time_to_wait)
+                # Re-evaluate after sleeping (remove old timestamps again)
+                current_time = time.time()
+                while dm_timestamps and dm_timestamps[0] < current_time - 3600:
+                    dm_timestamps.popleft()
+            # --- End Hourly Rate Limit Check ---
+
+
+            # --- Account Selection ---
+            if not accounts: # Check if the primary list is empty
+                if not used_accounts: # Check if the used list is also empty
+                    Modules.log(1, 'No accounts available (fresh or used). Breaking DM send loop for this cycle.')
+                    # Put remaining tasks back? For now, they are lost for this cycle.
+                    # dm_tasks.insert(0, task) # Put current task back
+                    break # Break inner while loop
+                else:
+                    Modules.log(-1, 'Re-populating accounts from used list.')
+                    accounts, used_accounts = used_accounts, list()
+
             try:
-                account = accounts.pop(0) # getting the first account of the list accounts, then removing it
-            except IndexError: # in case no more accounts are in the accounts list
-                Modules.log(1, '[RedditDMBot] There are no more useful accounts to use.')
-                break
+                account = accounts.pop(0)
+            except IndexError:
+                Modules.log(1, 'Account list unexpectedly empty. Breaking DM send loop.')
+                # dm_tasks.insert(0, task) # Put current task back
+                break # Break inner while loop
+            # --- End Account Selection ---
 
-            # choosing a proxy to use
-            if(config['proxy']['proxy_type'] == 'localhost'): proxy = 'localhost'
-            elif(config['proxy']['proxy_type'] == 'sticky'):
-                try:
-                    proxy = proxies_pool['sticky'].pop(0)
-                except IndexError:
-                    Modules.log(1, '[RedditDMBot] There are no more useful proxies to use.')
-                    break
-            elif(config['proxy']['proxy_type'] == 'rotative'):
-                proxy = proxies_pool['rotative'][0]
 
-            asyncio.run(
-                RedditDMBot(
-                    config = config,
-                    links = links,
-                    paths = paths,
-                    locators = locators,
-                    proxy = proxy,
-                    list_usernames = list_usernames,
-                    used_accounts = used_accounts,
-                    toss_accounts = toss_accounts,
-                    account = account,
-                    target = username,
-                    personalized_message = message,
-                    post_url = post_url,
-                    usernames_sent = usernames_sent
+            # --- Proxy Selection (Simplified as per UI changes) ---
+            # Assuming no proxies are configured / needed based on UI removing proxy settings
+            proxy = 'localhost'
+            # --- End Proxy Selection ---
+
+            Modules.log(0, f"Attempting DM {tasks_processed_this_cycle} to u/{username} using account {account.get('username', 'N/A')}...")
+
+            # Record timestamp *before* sending for rate limiting
+            dm_timestamps.append(time.time())
+
+            try:
+                # --- Run Async Bot Task ---
+                # NOTE: This assumes RedditDMBot handles its own internal errors
+                # and updates toss_accounts or used_accounts internally.
+                # We are *not* getting a direct success/failure return value here.
+                asyncio.run(
+                    RedditDMBot(
+                        config = config,
+                        links = links,
+                        paths = paths,
+                        locators = locators,
+                        proxy = proxy, # localhost
+                        list_usernames = list_usernames, # Pass for internal logic if still needed by RedditDMBot
+                        used_accounts = used_accounts, # Pass mutable list
+                        toss_accounts = toss_accounts, # Pass mutable list
+                        account = account, # The chosen account
+                        target = username, # Target user
+                        personalized_message = message, # Composed message
+                        post_url = post_url, # Post URL for logging
+                        usernames_sent = usernames_sent # Pass for internal logic if still needed
+                    )
                 )
-            ) # entry point
-            message_count += 1
-        Modules.log(0, f'Loop complete. Total DMs sent: {message_count}. Sleeping for {config["cooldown"]} seconds...')
-        sleep(config['cooldown'])
+                Modules.log(0, f"Finished DM attempt for u/{username}.")
+                # We assume success if no major error occurred *here*.
+                # The actual logging to sent_log happens *inside* RedditDMBot currently.
+                # If that needs changing, RedditDMBot must be modified.
+                message_count_this_cycle += 1
 
-    Modules.log(-1, '[RedditDMBot] - Done.')
+            except Exception as e:
+                 Modules.log(2, f"Unexpected error running asyncio task for {username}: {e}")
+                 import traceback
+                 traceback.print_exc()
+                 # Decide what to do - maybe add account to toss_accounts here?
+                 # toss_accounts.append(account['username'])
+            # --- End Async Bot Task ---
+
+
+            # --- Pacing Delay ---
+            base_delay = max(0, min_dm_gap_sec) # Ensure base delay isn't negative
+            actual_jitter = random.uniform(-jitter_sec, jitter_sec)
+            sleep_duration = max(0.1, base_delay + actual_jitter) # Ensure minimum sleep to prevent rapid loops on 0 config
+            Modules.log(-1, f"Sleeping for {sleep_duration:.2f} seconds before next DM...")
+            time.sleep(sleep_duration)
+            # --- End Pacing Delay ---
+        dm_tasks = []
+        Modules.log(0, "Clearing DM tasks for next cycle.")
+        # --- End of Inner DM Sending Loop ---
+        Modules.log(0, f'DM sending loop finished for this cycle. DMs attempted/sent in cycle: {message_count_this_cycle}.')
+
+        # --- Sleep before next Harvest Cycle ---
+        Modules.log(0, f"Sleeping for harvest interval: {harvest_interval_sec} seconds...")
+        time.sleep(harvest_interval_sec)
+        # --- End Sleep ---
+
+    # This part is likely unreachable because of `while True`
+    Modules.log(-1, '[RedditDMBot] - Main loop exited (unexpected).')

@@ -1,21 +1,34 @@
 {
-    "proxy":{
-        "proxy_type":"localhost",
-        "proxy_rotation_link":"",
-        "proxy_rotation_cooldown":20
+    "proxy": {
+        "proxy_type": "localhost",
+        "proxy_rotation_link": "",
+        "proxy_rotation_cooldown": 20
     },
-    "cooldown":5,
-    "headless":false,
-    "browser_args":[
+    "cooldown": 5.0,
+    "headless": false,
+    "browser_args": [
         "--start-maximized",
         "--disable-background-networking",
         "--disable-sync",
         "--blink-settings=imagesEnabled=false",
         "--disable-features=OptimizationGuideModelDownloading,OptimizationHintsFetching,OptimizationTargetPrediction,OptimizationHints"
     ],
-    "messages":[
+    "messages": [
         "hi",
         "hi there"
     ],
-    "target_subreddits": ["startups"]
+    "target_subreddits": [
+        "startups",
+        "wellness"
+    ],
+    "openaiApiKey": "",
+    "openaiModel": "gpt-4o-mini",
+    "messageTemplate": "Hi {username}, saw your post about [briefly mention topic - AI should fill this]. Thought you might find this interesting: {brandBlurb}. Check it out: {appLink}",
+    "personaRules": "- Be concise and direct.\n- Sound genuinely helpful, not overly salesy.\n- Avoid emojis.",
+    "brandBlurb": "our cool new app",
+    "appLink": "https://example.com/app",
+    "HARVEST_INTERVAL_SEC": 30,
+    "MIN_DM_GAP_SEC": 60,
+    "JITTER_SEC": 15,
+    "MAX_DM_PER_HOUR": 40
 }

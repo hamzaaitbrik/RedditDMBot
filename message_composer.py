@@ -4,33 +4,17 @@ import os
 from typing import Dict, Any, Optional
 from module_utils import Modules
 
-# Example user configuration (in a real scenario, load this from your config)
-DEFAULT_USER_CONFIG = {
-    "openaiApiKey": os.getenv("OPENAI_API_KEY", "sk-..."),
-    "openaiModel": os.getenv("OPENAI_MODEL", "gpt-3.5-turbo"),
-    "messageTemplate": "Hi {username}, saw your post about [briefly mention topic - AI should fill this]. Thought you might find this interesting: {brandBlurb}. Check it out: {appLink}",
-    "personaRules": """
-    - Be concise and direct.
-    - Sound genuinely helpful, not overly salesy.
-    - Avoid emojis.""",
-    "brandBlurb": "our cool new app",
-    "appLink": "https://example.com/app"
-}
-# --- End Configuration ---
-
-# Initialize the OpenAI client globally or within the function
-# Global initialization is fine if the API key doesn't change often.
-# The client will automatically pick up the OPENAI_API_KEY environment variable.
-try:
-    client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-except openai.OpenAIError as e:
-     Modules.log(1, f"[Composer] ERROR: Failed to initialize OpenAI client: {e} Exiting...")
-     exit()
-
 def compose_dm_message_openai_lib( # Renamed slightly for clarity
     post_data: Dict[str, Any],
-    user_config: Dict[str, Any] = DEFAULT_USER_CONFIG
+    user_config: Dict[str, Any]
 ) -> Optional[str]:
+    
+    try:
+        client = openai.OpenAI(api_key=user_config.get("openaiApiKey", ""))
+    except openai.OpenAIError as e:
+        Modules.log(1, f"[Composer] ERROR: Failed to initialize OpenAI client: {e} Exiting...")
+        exit()
+
     post_author = post_data.get('author', 'user')
     post_title = post_data.get('title', '')
 
@@ -112,7 +96,8 @@ Message Template to use (fill in the topic placeholder):
 def main_test():
     print("--- Running Message Composer Test (using OpenAI Library) ---")
 
-
+    config = Modules.getConfig()
+    
     mock_post = {
         'author': 'TestUser123',
         'title': 'Looking for advice on scaling my Python web application',
@@ -123,10 +108,9 @@ def main_test():
     }
 
     Modules.log(0, f"Using Mock Post:{json.dumps(mock_post, indent=2)}")
-    Modules.log(0, f"Using Default Config (Template: '{DEFAULT_USER_CONFIG['messageTemplate']}')")
 
     # Call the library-based function
-    composed_message = compose_dm_message_openai_lib(mock_post)
+    composed_message = compose_dm_message_openai_lib(mock_post, config)
 
     if composed_message:
         Modules.log(0, "--- Successfully Composed Message ---")
