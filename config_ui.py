@@ -3,7 +3,8 @@ import json
 import os
 
 CONFIG_PATH = os.path.join('rsrc', 'config.json')
-PATHS_PATH = os.path.join('rsrc', 'paths.json') # Define path for paths.json
+PATHS_PATH = os.path.join('rsrc', 'paths.json')
+ACCOUNTS_PATH = os.path.join('rdt', 'accounts.json') # Define path for accounts.json
 
 def load_json(filepath):
     """Loads configuration from a JSON file."""
@@ -38,12 +39,17 @@ st.title("Reddit DM Bot Configuration")
 # Load both config.json and paths.json
 config = load_json(CONFIG_PATH)
 paths_config = load_json(PATHS_PATH)
+accounts_data = load_json(ACCOUNTS_PATH) # Load accounts data
 
 # Initialize if loading failed
 if config is None:
     config = {}
 if paths_config is None:
     paths_config = {}
+if accounts_data is None:
+    # If accounts.json doesn't exist or is invalid, start with an empty list
+    accounts_data = []
+    st.warning(f"Could not load accounts from {ACCOUNTS_PATH}. You can add new accounts below.")
 
 
 col1, col2 = st.columns(2)
@@ -61,6 +67,27 @@ with col1:
     config['personaRules'] = st.text_area("Persona Rules for AI", value=config.get('personaRules', '- Be concise and direct.\n- Sound genuinely helpful, not overly salesy.\n- Avoid emojis.'), height=100)
     config['brandBlurb'] = st.text_input("Brand Blurb", value=config.get('brandBlurb', 'our cool new app'))
     config['appLink'] = st.text_input("App Link", value=config.get('appLink', 'https://example.com/app'))
+
+    # --- Reddit Accounts Management --- #
+    st.header("Reddit Accounts")
+    st.caption(f"Manage accounts stored in {ACCOUNTS_PATH}")
+
+    edited_accounts = st.data_editor(
+        accounts_data, # Pass the loaded list of dicts
+        num_rows="dynamic", # Allow adding/deleting rows
+        key="accounts_editor",
+        column_config={
+            "username": st.column_config.TextColumn("Reddit Username", required=True),
+            "password": st.column_config.TextColumn("Reddit Password", required=True),
+            # Add other columns if your accounts.json has more fields
+        },
+        hide_index=True,
+        use_container_width=True
+    )
+    # Store the edited data back (will be saved on button press)
+    accounts_data = edited_accounts
+    # --- End Reddit Accounts Management --- #
+
 with col2:
     st.header("Advanced Settings & Pacing")
     st.caption("Pacing: Approx. 1 DM every MIN_DM_GAP_SEC +/- JITTER_SEC seconds.")
@@ -88,4 +115,24 @@ if st.button("Save All Configurations", use_container_width=True):
     if paths_valid:
         save_json(PATHS_PATH, paths_config)
     else:
-        st.error("Paths configuration (paths.json) was not loaded, cannot save.") 
+        st.error("Paths configuration (paths.json) was not loaded, cannot save.")
+
+    # Save accounts data
+    if accounts_data is not None: # Check if data exists (even if empty list)
+        # Basic validation: Ensure required keys are present if list is not empty
+        valid_accounts = True
+        if isinstance(accounts_data, list):
+            for i, acc in enumerate(accounts_data):
+                if not isinstance(acc, dict) or 'username' not in acc or 'password' not in acc or not acc['username'] or not acc['password']:
+                    st.error(f"Account entry #{i+1} is invalid or missing username/password. Please correct before saving.")
+                    valid_accounts = False
+                    break
+        else:
+             st.error("Accounts data structure is invalid (must be a list of dictionaries). Cannot save.")
+             valid_accounts = False
+
+        if valid_accounts:
+            save_json(ACCOUNTS_PATH, accounts_data)
+    else:
+         # This case should ideally not happen due to initialization
+         st.error("Accounts data is missing. Cannot save.") 
