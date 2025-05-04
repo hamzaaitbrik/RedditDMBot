@@ -8,7 +8,6 @@ def compose_dm_message_openai_lib( # Renamed slightly for clarity
     post_data: Dict[str, Any],
     user_config: Dict[str, Any]
 ) -> Optional[str]:
-    
     try:
         client = openai.OpenAI(api_key=user_config.get("openaiApiKey", ""))
     except openai.OpenAIError as e:

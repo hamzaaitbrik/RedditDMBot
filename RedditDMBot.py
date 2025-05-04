@@ -294,8 +294,7 @@ if __name__ == '__main__': # software entry point
     # --- Load Initial Data (outside the main loop) ---
     Modules.dbToList(paths['usernames'], list_usernames) # Assuming this might still be needed for some legacy check? Or remove if unused.
     # Load the sent log using the correct Modules function
-    sent_log_filepath = paths.get('sent_log_file', 'logs/sent_log.csv') # Default path if not in paths.json
-    sent_log_data = Modules.load_sent_log(sent_log_filepath) # Returns a set of (username, post_url) tuples
+    Modules.dbToList(paths['usernames_sent'], usernames_sent)
 
     accounts_all = Modules.getAccounts()
     if not accounts_all:
@@ -377,7 +376,7 @@ if __name__ == '__main__': # software entry point
             post_url = task['post_url']
 
             # --- Filtering based on Sent Log ---
-            if (username, post_url) in sent_log_data:
+            if username in usernames_sent:
                 Modules.log(1, f'User {username} already sent DM regarding post {post_url}. Skipping.')
                 continue
             # --- End Filtering ---
