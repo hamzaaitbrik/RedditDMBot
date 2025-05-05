@@ -95,6 +95,7 @@ with col2:
     config['MIN_DM_GAP_SEC'] = st.number_input("Min DM Gap (sec)", value=config.get('MIN_DM_GAP_SEC', 60), min_value=10, help="Minimum time between sending DMs.")
     config['JITTER_SEC'] = st.number_input("DM Jitter (sec)", value=config.get('JITTER_SEC', 15), min_value=0, max_value=config.get('MIN_DM_GAP_SEC', 60) // 2, help="Random seconds added/subtracted to MIN_DM_GAP_SEC.")
     config['MAX_DM_PER_HOUR'] = st.number_input("Max DMs per Hour (approx)", value=config.get('MAX_DM_PER_HOUR', 40), min_value=1, help="An approximate safety limit.")
+    config['FETCH_LIMIT_SCALING_FACTOR'] = st.number_input("Fetch Limit Scaling Factor", value=config.get('FETCH_LIMIT_SCALING_FACTOR', 1.0), min_value=0.1, max_value=10.0, help="Scaling factor for the number of posts fetched per subreddit.")
 
     st.header("File Paths")
     paths_config['sent_log_file'] = st.text_input("Sent Log File Path", value=paths_config.get('sent_log_file', 'logs/sent_log.csv'), help="Path relative to project root where sent DMs are logged.")

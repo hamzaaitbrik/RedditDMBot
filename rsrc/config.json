@@ -18,8 +18,7 @@
         "hi there"
     ],
     "target_subreddits": [
-        "startups",
-        "wellness"
+        "startups"
     ],
     "openaiApiKey": "",
     "openaiModel": "gpt-4o-mini",
@@ -30,5 +29,6 @@
     "HARVEST_INTERVAL_SEC": 30,
     "MIN_DM_GAP_SEC": 60,
     "JITTER_SEC": 15,
-    "MAX_DM_PER_HOUR": 40
+    "MAX_DM_PER_HOUR": 40,
+    "FETCH_LIMIT_SCALING_FACTOR": 2.0
 }

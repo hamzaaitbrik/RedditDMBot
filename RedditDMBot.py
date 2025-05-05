@@ -7,8 +7,10 @@ import random # Add random import
 from collections import deque # Use deque for efficient timestamp tracking
 
 # Initializing components
-list_usernames, usernames_sent = list(), list()
+usernames_sent = list()
 
+def escape_newlines(message):
+    return message.replace('\n', '\r\n')
 
 async def RedditDMBot(
         config: dict,
@@ -16,7 +18,7 @@ async def RedditDMBot(
         paths: dict,
         locators: dict,
         proxy: str,
-        list_usernames: list,
+        # list_usernames: list,
         used_accounts: list,
         toss_accounts: list,
         account: dict,
@@ -177,7 +179,8 @@ async def RedditDMBot(
                 'placeholder':'Message'
             }
         )
-        await message_input.send_keys(personalized_message) # chosing a random message out of the list of messages
+        Modules.log(0, f"[RedditDMBot] - Sending message: {personalized_message}")
+        await message_input.send_keys(escape_newlines(personalized_message)) # chosing a random message out of the list of messages
 
         sleep(uniform(0.5,1.5))
 
@@ -220,7 +223,6 @@ async def RedditDMBot(
             used_accounts.append(account)
 
             # removing the user we DMed from the list of usernames
-            list_usernames.remove(target)
             usernames_sent.append(target)
 
             # adding the user we DMed alongside the account we used to DM to db/usernames_sent.csv
@@ -292,7 +294,7 @@ if __name__ == '__main__': # software entry point
 
 
     # --- Load Initial Data (outside the main loop) ---
-    Modules.dbToList(paths['usernames'], list_usernames) # Assuming this might still be needed for some legacy check? Or remove if unused.
+    # Modules.dbToList(paths['usernames'], list_usernames) # Assuming this might still be needed for some legacy check? Or remove if unused.
     # Load the sent log using the correct Modules function
     Modules.dbToList(paths['usernames_sent'], usernames_sent)
 
@@ -313,9 +315,20 @@ if __name__ == '__main__': # software entry point
         Modules.log(0, f"Harvesting new posts from subreddits: {config.get('target_subreddits', [])}...")
 
         all_posts = []
-        for subreddit in config.get('target_subreddits', []):
+        target_subreddits = config.get('target_subreddits', [])
+        fetch_limit_scaling_factor = config.get('FETCH_LIMIT_SCALING_FACTOR', 1.5) # Default to 1.5 if not set
+
+        if not target_subreddits:
+            Modules.log(1, "No target subreddits defined in config. Skipping harvest.")
+            fetch_limit_per_subreddit = 0 # Or some default like 10 if you want to fetch anyway
+        else:
+            # Calculate fetch limit per subreddit, ensuring it's at least 1
+            fetch_limit_per_subreddit = max(1, int((max_dm_per_hour * fetch_limit_scaling_factor) / len(target_subreddits)))
+            Modules.log(-1, f"Calculated fetch limit per subreddit: {fetch_limit_per_subreddit} (based on {max_dm_per_hour}/hr, {len(target_subreddits)} subs, factor {fetch_limit_scaling_factor})")
+
+        for subreddit in target_subreddits:
              # Fetch a reasonable number, filtering happens later
-            subreddit_posts = poll_subreddit_new(subreddit, limit= 20) # Fetch more, filter later
+            subreddit_posts = poll_subreddit_new(subreddit, limit= fetch_limit_per_subreddit) # Fetch more, filter later
             if subreddit_posts:
                 all_posts.extend(subreddit_posts)
             time.sleep(random.uniform(1, 3)) # Small delay between subreddit polls
@@ -332,6 +345,9 @@ if __name__ == '__main__': # software entry point
         Modules.log(0, "Composing messages for harvested posts...")
         composition_attempts = 0
         for post in all_posts:
+            if post['author'] in usernames_sent:
+                Modules.log(1, f'User {post["author"]} already sent DM previously. Skipping post.')
+                continue
             composition_attempts += 1
             Modules.log(-1, f"Attempting composition {composition_attempts}/{len(all_posts)} for post by u/{post.get('author','N/A')}")
             # Pass the necessary config parts to the composer
@@ -441,7 +457,7 @@ if __name__ == '__main__': # software entry point
                         paths = paths,
                         locators = locators,
                         proxy = proxy, # localhost
-                        list_usernames = list_usernames, # Pass for internal logic if still needed by RedditDMBot
+                        # list_usernames = list_usernames, # Pass for internal logic if still needed by RedditDMBot
                         used_accounts = used_accounts, # Pass mutable list
                         toss_accounts = toss_accounts, # Pass mutable list
                         account = account, # The chosen account
