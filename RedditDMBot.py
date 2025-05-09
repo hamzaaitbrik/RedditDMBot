@@ -133,6 +133,8 @@ async def RedditDMBot(
             print(traceback.format_exc())
             Modules.log(2, f'[RedditDMBot] - An error occured while trying to login to Reddit account {account["username"]}:{account["password"]} via {ip}. Failed to locate one or more elements on Reddit\'s login page.')
             sleep(500)
+            # add account back to accounts list
+            used_accounts.append(account)
             return
 
         except: # in case of other error
@@ -140,6 +142,8 @@ async def RedditDMBot(
             print(traceback.format_exc())
             Modules.log(2, f'[RedditDMBot] - An error occured while trying to login to Reddit account {account["username"]}:{account["password"]} via {ip}.')
             sleep(500)
+            # add account back to accounts list
+            used_accounts.append(account)
             return
          
         try:
@@ -151,6 +155,8 @@ async def RedditDMBot(
             
             Modules.log(2, f'[RedditDMBot] - Unable to log in into account {account["username"]}:{account["password"]} via {ip}. Exiting.')
             sleep(500)
+            # add account back to accounts list
+            used_accounts.append(account)
             return
 
         sleep(config['cooldown'])
@@ -167,11 +173,13 @@ async def RedditDMBot(
         sleep(config['cooldown'])
 
         # getting the chat page
+        Modules.log(0, "accessing the chat page")
         await instance.get(f'{links["REDDIT_MESSAGE_PAGE_URL"]}/{target_id}')
 
         sleep(config['cooldown'])
         
         # writing the message
+        Modules.log(0, "writing the message")
         message_input = await instance.find(
             tagname = 'textarea',
             attrs = {
@@ -273,7 +281,6 @@ async def RedditDMBot(
 
 
 if __name__ == '__main__': # software entry point
-
     config, paths, links, locators = Modules.getConfig(), Modules.getPaths(), Modules.getLinks(), Modules.getLocators()
     proxies_pool = Modules.getProxies()
 
