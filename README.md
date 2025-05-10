@@ -1,43 +1,85 @@
-**[Click here](https://discord.gg/Y5NeDy5XXT) to join the Discord server for this project, let's connect!**<br>
-**[Click here](https://t.me/RedditDMBot) to join the Telegram channel for this project, in case Discord server goes down. Let's connect!**<br>
+Augments https://github.com/hamzaaitbrik/RedditDMBot.git
 
-Feel free to contribute to this project or suggest more features to add. You can reach me on Discord @**ozymandiasthegreat**.
-# What's new?
-I changed the technology which the software depend on to a private framework I built on top of [Zendriver](https://github.com/stephanlensky/zendriver). The reason I changed the framework is because Playwright and Selenium are easily detected by Reddit, unlike Zendriver that uses CDP to connect to Chrome.<br>
-I also added functionality so that you only need to provide the bot with plain usernames of users you want to DM, unlike the older version which required you to get a datapoint Reddit has on its backend.
+# Reddit DM Bot (Zendriver Version)
 
-# Importnat
-There are three versions of the bot, [Selenium](https://github.com/hamzaaitbrik/RedditDMBot/tree/selenium), [Playwright](https://github.com/hamzaaitbrik/RedditDMBot), and [Zendriver](https://github.com/hamzaaitbrik/RedditDMBot/tree/zendriver). Zendriver version is tested as of the 22nd of April 2025. **Zendriver version performs better than the rest.**<br>
+This bot automates sending personalized direct messages (DMs) to Reddit users based on their recent posts in specified subreddits. It leverages OpenAI for message composition and Zendriver for robust browser automation, making it less prone to detection than Selenium or Playwright.
 
 # Prerequisites
-0 - Have ```Python``` and ```Pip``` installed. This project was developed with Python 3.11.8<br>
-1 - Clone this repository running the command ```git clone https://github.com/hamzaaitbrik/RedditDMBot.git``` or simply [Download it](https://github.com/hamzaaitbrik/RedditDMBot/archive/refs/heads/zendriver.zip).<br>
-2 - Install ```Pipenv``` using the command ```pip install pipenv```.<br>
-3 - Run ```pipenv install``` inside the project to install its dependencies.<br>
 
-# How to use
-1 - Add accounts to ```rdt/account.json```. Refer to [rdt/README](https://github.com/hamzaaitbrik/RedditDMBot/blob/playwright/rdt/README.md) to see how to properly add accounts.<br>
-2 - Change what needs to be changed in ```rsrc/config.json```. Refer to [rsrc/README](https://github.com/hamzaaitbrik/RedditDMBot/blob/playwright/rsrc/README.md) to see how to change values to meet your needs.<br>
-3 - Add proxies to ```rsrc/proxies.json``` to use the bot with proxies.<br>
-4 - Fill ```db/usernames.csv``` with all the **usernames** you want to DM.<br>
-5 - Run ```RedditDMBot.py```.
+1.  **Python:** Ensure you have Python installed (developed with 3.11+). You can download it from [python.org](https://www.python.org/). Pip (Python's package installer) should be included.
+2.  **Pipenv:** A tool for managing project dependencies and virtual environments.
+    - **macOS (using Homebrew):** `brew install pipenv`
+    - **Other Systems (using pip):** `pip install pipenv`
+3.  **Git:** Required to clone the repository.
 
-# How does it work?
-RedditDMBot is a bot made for the purpouse of automating the process of sending messages to Reddit users<br>
-What the bot does:<br>
-0 - The bot checks whether you have a proxy in ```rsrc/config.json```, all actions will be made through the proxy if found. Refer to [rsrc/README](https://github.com/hamzaaitbrik/RedditDMBot/blob/playwright/rsrc/README.md) to better understand how to properly add a proxy.<br>
-1 - Logs into one of the Reddit account in ```accounts.json```.<br>
-2 - Navigates to chat page.<br>
-3 - Checks if the user already received a message.<br>
-4 - Sends a message to the user.<br>
-5 - Deletes the user from the list of users to DM and adds it to ```db/usernames_sent.csv```.<br>
-6 - Logs out of the account used to DM the user.<br>
-7 - Remove it from the list of available accounts and add it to a list of used accounts.<br>
-8 - Logs into another Reddit account that wasn't used.<br>
-9 - If there are no many available accounts, the bot reuses the used accounts until all users on your ```db/usernames.csv``` received DMs.
+# Installation & Setup
 
-# In action!
-![In action!](https://github.com/hamzaaitbrik/RedditDMBot/blob/playwright/media/InAction!.png "In action!")
+1.  **Clone Repository:** Open your terminal and run:
+    ```bash
+    git clone ...
+    cd RedditDMBot
+    ```
+2.  **Install Dependencies:** Use Pipenv to create a virtual environment and install the required packages:
+    ```bash
+    pipenv install
+    ```
+    This reads the `Pipfile` and installs libraries like `requests`, `openai`, `streamlit`, `zendriver`, etc.
+3.  **Activate Environment:** Enter the virtual environment created by Pipenv:
+    ```bash
+    pipenv shell
+    ```
+    You should now see the environment name (e.g., `(RedditDMBot)`) at the beginning of your terminal prompt. **All subsequent commands should be run within this shell.**
+4.  **OpenAI API Key:** Set your OpenAI API key as an environment variable. The message composer needs this to function.
+    - **Linux/macOS:** `export OPENAI_API_KEY='sk-your_real_key'`
+    - **Windows (cmd):** `set OPENAI_API_KEY=sk-your_real_key`
+    - **Windows (PowerShell):** `$env:OPENAI_API_KEY='sk-your_real_key'`
+      (Replace `sk-your_real_key` with your actual key). You might want to add this to your shell's profile (`.zshrc`, `.bashrc`, etc.) for persistence.
 
-<br><br>
+# Configuration
+
+Instead of manually editing JSON files, use the built-in Streamlit configuration UI:
+
+1.  **Run the UI:** While inside the Pipenv shell (`pipenv shell`), run:
+    ```bash
+    streamlit run config_ui.py
+    ```
+2.  **Edit Settings:** This will open a configuration page in your web browser. Adjust the following:
+    - **General Settings:** Target subreddits, cooldowns.
+    - **Reddit Accounts:** Add/edit/delete the Reddit accounts the bot will use for logging in and sending DMs.
+    - **OpenAI Message Composer:** Configure your OpenAI API Key (if not set via environment variable), the AI model (e.g., `gpt-4o-mini`), message template, persona rules, brand blurb, and app link. The AI will use these to craft personalized messages.
+    - **Advanced Settings & Pacing:** Control DM sending rates (minimum gap, jitter, max per hour).
+    - **File Paths:** Verify the paths for the Sent Log file.
+3.  **Save:** Click the "Save All Configurations" button at the bottom. This will update `rsrc/config.json`, `rsrc/paths.json`, and `rdt/accounts.json`.
+
+# How to Use
+
+The bot operates in two main (conceptual) stages: Harvesting/Composing and Sending. Currently, these are combined within the main script's loop.
+
+1.  **Ensure you are in the Pipenv shell:** `pipenv shell`
+2.  **Run the Bot:**
+    ```bash
+    python RedditDMBot.py
+    ```
+
+# How it Works (Current Workflow)
+
+1.  **Initialization:** The script loads configurations (`config.json`, `paths.json`), Reddit accounts (`accounts.json`), and the sent log (`sent_log.csv` specified in `paths.json`).
+2.  **Main Loop (`while True`):**
+    - **Harvesting:** It polls the target subreddits (defined in `config.json`) for recent posts using `harvester.py`'s `poll_subreddit_new` function.
+    - **Composition:** For each harvested post, it calls OpenAI (via `message_composer.py`) using your configured template, rules, and API key to generate a personalized message.
+    - **Task Queue:** Creates an in-memory list (`dm_tasks`) of tasks, each containing the target `username`, the `composed_message`, and the original `post_url`.
+    - **DM Sending Sub-Loop:** Processes the `dm_tasks` list one by one:
+      - **Filtering:** Checks the `sent_log.csv` data. If a DM has already been sent to that `username` for that specific `post_url`, it skips the task.
+      - **Rate Limiting:** Checks timestamps of recent DM attempts to ensure the `MAX_DM_PER_HOUR` limit isn't exceeded. Pauses if necessary.
+      - **Account Selection:** Picks an available Reddit account from the pool, rotating through used accounts if needed.
+      - **DM Attempt:** Uses `zendriver` to:
+        - Log into the selected Reddit account.
+        - Navigate to the target user's profile/chat page.
+        - Send the `composed_message`.
+      - **Logging Success:** If the DM appears to be sent successfully (based on checks within the `RedditDMBot` function), it appends the `username`, `post_url`, and current `timestamp` to the `sent_log.csv` file.
+      - **Pacing:** Waits for a calculated duration (`MIN_DM_GAP_SEC` +/- `JITTER_SEC`) before processing the next task.
+    - **Cycle Delay:** After processing all tasks generated in the current harvest cycle, it sleeps for the `HARVEST_INTERVAL_SEC` before starting the next harvest.
+
+This cycle repeats indefinitely until the script is stopped (e.g., with Ctrl+C).
+
 Enjoy!
